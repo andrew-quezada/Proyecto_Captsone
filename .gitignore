@@ -1,0 +1,10 @@
+# Ignorar el directorio de la virtualenv
+mi_tienda/venv/
+
+# Ignorar archivos de compilación de Python
+*.pyc
+__pycache__/
+
+# Ignorar archivos de configuración de IDE
+.vscode/
+.idea/
