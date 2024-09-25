@@ -1,4 +1,4 @@
-from db.settings import create_connection
+from settings import create_connection, close_connection
 import bcrypt
 import psycopg2
 

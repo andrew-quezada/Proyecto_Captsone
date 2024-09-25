@@ -1,9 +1,14 @@
-import tkinter as tk
 import ttkbootstrap as ttk
+from ttkbootstrap.constants import *
+from tkinter import font as tkFont
+from PIL import Image, ImageTk
+import tkinter as tk
 from gui.Ingresar_Stock import IngresarStock
+from gui.reg_nuevo_prod import Reg_nuevo_prod
+from gui.menu_nuevos_ingreso import MenuNuevosIngresos
 
 class VentanaGerente:
-    def __init__(self, root):
+    def __init__(self, root): 
         self.root = root
         self.root.title("Gerencia")
 
@@ -21,29 +26,69 @@ class VentanaGerente:
         # Configurar el comportamiento de la ventana para que no se pueda redimensionar
         self.root.resizable(True, True)  # Hacer que la ventana sea redimensionable
 
-        # Crear botones y empaquetarlos
-        self.button1 = ttk.Button(root, text="Registrar Stock", bootstyle="primary", command=self.open_ingresar_stock_window)
-        self.button2 = ttk.Button(root, text="Funcion por definir", bootstyle="primary", command=self.mantencion_productos)
-        self.button3 = ttk.Button(root, text="funcion por definir", bootstyle="primary", command=self.ventas)
+        # Crear un contenedor para los botones principales
+        self.contenedor = tk.Frame(self.root)
+        self.contenedor.pack(expand=True, fill=tk.BOTH, pady=20, padx=20)
 
-        # Organizando los botones
-        self.button1.grid(row=1, column=1, sticky="ew", padx=10, pady=10)
-        self.button2.grid(row=1, column=3, sticky="ew", padx=10, pady=10)
-        self.button3.grid(row=1, column=5, sticky="ew", padx=10, pady=10)
+        # Crear un contenedor separado para el botón de "Cerrar sesión"
+        self.contenedor_salida = tk.Frame(self.root)
+        self.contenedor_salida.pack(fill=tk.Y, pady=10, padx=10, side=tk.TOP)
 
-        # Organizando las columnas vacías
-        root.grid_columnconfigure(0, weight=1)
-        root.grid_columnconfigure(1, weight=1)
-        root.grid_columnconfigure(2, weight=1)
-        root.grid_columnconfigure(3, weight=1)
-        root.grid_columnconfigure(4, weight=1)
-        root.grid_columnconfigure(5, weight=1)
-        root.grid_columnconfigure(6, weight=1)
+        # Crear una fuente personalizada para el botón específico
+        fuente_personalizada_boton_salida = tkFont.Font(family="Arial", size=10, weight="bold")
 
-        # Organizando las filas vacías
-        root.grid_rowconfigure(0, weight=1)
-        root.grid_rowconfigure(1, weight=1)
-        root.grid_rowconfigure(2, weight=1)
+        # Crear y configurar un estilo personalizado para el botón de salida
+        style = ttk.Style()
+        style.configure("Custom.TButton", font=("Arial", 10, "bold"))
+        style.configure("Salida.TButton", font=fuente_personalizada_boton_salida)
+
+        # Crear una fuente personalizada
+        fuente_personalizada = tkFont.Font(family="Arial", size=14, weight="bold")
+
+        # Crear y configurar un estilo personalizado para los botones principales
+        style.configure("Custom.TButton", font=fuente_personalizada, anchor="center")
+
+        # Cargar y redimensionar los íconos usando Pillow
+        imagen1 = Image.open("app/img/list-check.png")
+        imagen_redimensionada = imagen1.resize((50, 50))
+        icono1 = ImageTk.PhotoImage(imagen_redimensionada)
+
+        imagen2 = Image.open("app/img/completed.png")
+        imagen_redimensionada = imagen2.resize((50, 50))
+        icono2 = ImageTk.PhotoImage(imagen_redimensionada)
+
+        imagen3 = Image.open("app/img/document.png")
+        imagen_redimensionada = imagen3.resize((50, 50))
+        icono3 = ImageTk.PhotoImage(imagen_redimensionada)
+
+        imagen4 = Image.open("app/img/exit.png")
+        imagen_redimensionada = imagen4.resize((15, 15))
+        icono4 = ImageTk.PhotoImage(imagen_redimensionada)
+
+        # Crear los botones principales
+        boton1 = ttk.Button(self.contenedor, text="Gestion\n    de \n Stock", image=icono1, compound="top", style="Custom.TButton", bootstyle=SUCCESS, command=self.open_ingresar_stock_window)
+        boton2 = ttk.Button(self.contenedor, text=" Consultas\n         y\nSolicitudes", image=icono2, compound="top", style="Custom.TButton", bootstyle=SUCCESS)
+        boton3 = ttk.Button(self.contenedor, text="Nuevos\ningresos\n", image=icono3, compound="top", style="Custom.TButton", bootstyle=SUCCESS, command=self.open_nuevos_ingresos)
+
+        # Botón "Cerrar sesión" en un frame aparte
+        boton_salida = ttk.Button(self.contenedor_salida, text="Cerrar sesión", image=icono4, compound="left", style="Salida.TButton", bootstyle=SUCCESS)
+
+        # Organizar el menú y los botones en la cuadrícula del frame principal
+        boton1.grid(row=1, column=0, padx=20, pady=40, ipadx=80, ipady=150)
+        boton2.grid(row=1, column=1, padx=20, pady=40, ipadx=80, ipady=150)
+        boton3.grid(row=1, column=2, padx=20, pady=40, ipadx=80, ipady=150)
+
+        # Botón de "Cerrar sesión" en el frame aparte, en la parte inferior
+        boton_salida.pack(anchor="e")
+
+        self.contenedor.columnconfigure([0, 1, 2], weight=1)
+        self.contenedor.rowconfigure([0, 1], weight=1)
+
+        # Mantener la referencia de los íconos
+        boton1.image = icono1
+        boton2.image = icono2
+        boton3.image = icono3
+        boton_salida.image = icono4
 
     def open_ingresar_stock_window(self):
         self.root.withdraw()  # Oculta la ventana actual (VentanaGerente)
@@ -53,15 +98,25 @@ class VentanaGerente:
         # Asegúrate de que al cerrar la ventana de Ingresar Stock, regrese a VentanaGerente
         new_root.protocol("WM_DELETE_WINDOW", lambda: self.on_close_window(new_root))
 
+    def open_nuevo_producto_window(self):
+        self.root.withdraw()  # Oculta la ventana actual (VentanaGerente)
+        new_root = ttk.Toplevel(self.root)  # Crea una nueva ventana hija para Ingresar nuevo producto
+        Reg_nuevo_prod(new_root)
+
+        # Asegúrate de que al cerrar la ventana de Ingresar nuevo producto, regrese a VentanaGerente
+        new_root.protocol("WM_DELETE_WINDOW", lambda: self.on_close_window(new_root))
+
     def on_close_window(self, window):
-        window.destroy()  # Cierra la ventana de Ingresar Stock
+        window.destroy()  # Cierra la ventana
         self.root.deiconify()  # Muestra la ventana de gerente de nuevo
 
-    def mantencion_productos(self):
-        print("Mantención de productos")
+    def open_nuevos_ingresos(self):
+        self.root.withdraw()  # Oculta la ventana actual (VentanaGerente)
+        new_root = ttk.Toplevel(self.root)  # Crea una nueva ventana hija para Ingresar nuevo producto
+        MenuNuevosIngresos(new_root)
 
-    def ventas(self):
-        print("Ventas")
+        # Asegúrate de que al cerrar la ventana de Ingresar nuevo producto, regrese a VentanaGerente
+        new_root.protocol("WM_DELETE_WINDOW", lambda: self.on_close_window(new_root))
 
 if __name__ == "__main__":
     root = ttk.Window(themename="superhero")

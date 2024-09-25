@@ -1,6 +1,6 @@
 from gui.login import Login
 import ttkbootstrap as ttk
-from db.settings import create_connection, close_connection
+from settings import create_connection
 
 def main():
     # Inicializa la conexión a la base de datos y guarda la conexión

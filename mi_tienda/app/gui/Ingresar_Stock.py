@@ -2,6 +2,13 @@ import tkinter as tk
 import ttkbootstrap as ttk
 from datetime import datetime
 
+# lista de validaciones
+# verificar si el producto ingresado existe en la base de datos
+# si se ingresa nuevamente un producto que este se sume con el ya ingresado
+# modificar la tabla de productos para que se refleje automaticamente el nombre del producto por el codigo
+# agregar funcion de ingreso mediante scan de barra  
+# hacer mas dinamico el ingreso de fecha 
+
 class IngresarStock:
     def __init__(self, root):
         self.root = root
