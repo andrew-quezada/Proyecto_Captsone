@@ -44,11 +44,11 @@ class MenuNuevosIngresos:
         style.configure("Custom.TButton", font=fuente_personalizada, anchor="center")
 
         # Cargar y redimensionar el ícono usando Pillow
-        imagen1 = Image.open("app/img/boxes.png")
+        imagen1 = Image.open("mi_tienda/app/img/boxes.png")
         imagen_redimensionada = imagen1.resize((50, 50)) 
         icono1 = ImageTk.PhotoImage(imagen_redimensionada)
 
-        imagen2 = Image.open("app/img/user-add.png")
+        imagen2 = Image.open("mi_tienda/app/img/user-add.png")
         imagen_redimensionada = imagen2.resize((50, 50))  
         icono2 = ImageTk.PhotoImage(imagen_redimensionada)
 

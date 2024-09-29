@@ -49,19 +49,19 @@ class VentanaGerente:
         style.configure("Custom.TButton", font=fuente_personalizada, anchor="center")
 
         # Cargar y redimensionar los íconos usando Pillow
-        imagen1 = Image.open("app/img/list-check.png")
+        imagen1 = Image.open("mi_tienda/app/img/list-check.png")
         imagen_redimensionada = imagen1.resize((50, 50))
         icono1 = ImageTk.PhotoImage(imagen_redimensionada)
 
-        imagen2 = Image.open("app/img/completed.png")
+        imagen2 = Image.open("mi_tienda/app/img/completed.png")
         imagen_redimensionada = imagen2.resize((50, 50))
         icono2 = ImageTk.PhotoImage(imagen_redimensionada)
 
-        imagen3 = Image.open("app/img/document.png")
+        imagen3 = Image.open("mi_tienda/app/img/document.png")
         imagen_redimensionada = imagen3.resize((50, 50))
         icono3 = ImageTk.PhotoImage(imagen_redimensionada)
 
-        imagen4 = Image.open("app/img/exit.png")
+        imagen4 = Image.open("mi_tienda/app/img/exit.png")
         imagen_redimensionada = imagen4.resize((15, 15))
         icono4 = ImageTk.PhotoImage(imagen_redimensionada)
 
