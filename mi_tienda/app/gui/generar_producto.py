@@ -150,19 +150,21 @@ class GenerarProducto:
         btn_cargar.grid(row=1, column=0, padx=10, pady=10)
 
     def cargar_datos(self):
-        # Llamar a cargar_productos y pasarle el Treeview
-        productos = cargar_productos(self.tree)
-        # Limpiar el Treeview antes de cargar nuevos datos
-        for row in self.tree.get_children():
-            self.tree.delete(row)
+            # Llamar a cargar_productos y pasarle el Treeview
+            productos = cargar_productos(self.tree)
+            
+            # Limpiar el Treeview antes de cargar nuevos datos
+            for row in self.tree.get_children():
+                self.tree.delete(row)
 
-        # Insertar productos en el Treeview
-        for producto in productos:
-            self.tree.insert("", tk.END, values=producto)
+            # Insertar productos en el Treeview
+            for producto in productos:
+                self.tree.insert("", tk.END, values=producto)
 
-        # Llenar el Combobox con los proveedores al inicio
-        self.cargar_proveedores_en_combobox()
-        self.cargar_categorias_en_combobox()
+            # Llenar el Combobox con los proveedores al inicio
+            self.cargar_proveedores_en_combobox()
+            self.cargar_categorias_en_combobox()
+
 
     def cargar_proveedores_en_combobox(self):
         proveedores = cargar_proveedores()  # Debería devolver una lista de tuplas (id, nombre)

@@ -68,7 +68,23 @@ def cargar_productos(tree):
     if conn:
         try:
             with conn.cursor() as cursor:
-                cursor.execute("SELECT * FROM productos")
+                # Modificar la consulta para incluir los JOINs y las columnas adicionales
+                cursor.execute("""
+                    SELECT 
+                        productos.id_producto,
+                        productos.cod_barra,
+                        productos.nombre,
+                        categoria.nombre_categoria,
+                        productos.precio_compra,
+                        productos.precio_venta,
+                        productos.stock,
+                        TO_CHAR(productos.fecha_ingreso, 'DD/MM/YYYY') AS fecha_ingreso,
+                        proveedores.empresa
+                    FROM productos
+                    LEFT JOIN categoria ON categoria.id_categoria = productos.id_categoria
+                    LEFT JOIN proveedores ON proveedores.id = productos.proveedor_id
+                """)
+                
                 productos = cursor.fetchall()  # Obtener todos los registros
                 
                 # Limpiar la tabla antes de cargar nuevos datos
