@@ -1,0 +1,33 @@
+.contenedor {
+  display: flex !important;
+  justify-content: center !important;
+  gap: 40px !important;
+  padding: 40px !important;
+}
+
+.ventas {
+  background-color: #e0e0e0;
+  padding: 30px; /* Aumenta el espacio interno */
+  border-radius: 10px;
+  box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.1);
+  width: 55%; /* Ajusta el tamaño para centrar */
+  margin-right: 20px; /* Espacio extra a la derecha */
+}
+
+.mensajes {
+  background-color: #e0e0e0;
+  padding: 30px; /* Aumenta el espacio interno */
+  border-radius: 10px;
+  box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.1);
+  width: 30%; /* Ajusta el tamaño para que quede a la derecha */
+  overflow-y: auto;
+  max-height: 400px;
+  margin-left: 20px; /* Espacio extra a la izquierda */
+}
+
+.mensaje {
+  margin-bottom: 15px; /* Añade espacio entre los mensajes */
+}
+
+
+
