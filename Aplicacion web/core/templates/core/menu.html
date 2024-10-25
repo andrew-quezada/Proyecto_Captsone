@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load static %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Menu Principal</title>
+    <link rel="stylesheet" href="{% static 'core/main_style.css' %}">
+</head>
+<body>
+    <header>
+        <div class="menu">&#9776;</div>
+        <div class="titulo">TEXTO DE EMPRESA</div>
+        <div class="usuario">
+            <div class="division">
+                <span class="presentacion">Bienvenida</span>
+                <span class="nombres">Estefanía</span>
+            </div>
+            <img src="{% static 'core/pngwing.com.png' %}" alt="Imagen de perfil" width="50px" height="50px">
+        </div>
+    </header>
+    <main class="contenedor">
+        <section class="ventas">
+            <h3>Principales ventas</h3>
+            <div class="producto">
+                <span class="producto-nombre">Producto más vendido</span>
+                <span class="producto-detalle">Mes</span>
+                <span class="producto-cantidad">102</span>
+                <span class="producto-codigo">[código]</span>
+            </div>
+            <div class="producto">
+                <span class="producto-nombre">Producto menos vendido</span>
+                <span class="producto-detalle">Mes</span>
+                <span class="producto-cantidad">5</span>
+                <span class="producto-codigo">[código]</span>
+            </div>
+        </section>
+        <section class="mensajes">
+            <h3>Mensajes</h3>
+            <article class="mensaje">
+                <p class="fecha">Fecha: 14 de agosto de 2024 (Hoy)</p>
+                <p>El pedido para reponer el stock del producto [código] ha sido realizado. Se espera que el nuevo inventario llegue en aproximadamente una a dos semanas.</p>
+            </article>
+            <article class="mensaje">
+                <p class="fecha">Fecha: 31 de julio de 2024</p>
+                <p>El stock del producto [código] ha alcanzado un nivel crítico. Se ha activado la reposición automática para evitar desabastecimientos.</p>
+            </article>
+            <article class="mensaje warning">
+                <p class="fecha">Fecha: 17 de julio de 2024</p>
+                <p>El producto [código] tiene un stock muy bajo. Te recomendamos estar atento para evitar quedarte sin inventario.</p>
+            </article>
+        </section>
+    </main>
+</body>
+</html>
