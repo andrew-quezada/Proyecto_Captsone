@@ -1,9 +1,9 @@
 import ttkbootstrap as ttk
 from tkinter import font as tkFont
-from datetime import datetime
 import tkinter as tk
-from db.manejo_productos import enviar_producto, cargar_proveedores, cargar_categorias,cargar_productos
+from db.manejo_productos import enviar_producto, cargar_proveedores, cargar_categorias,cargar_productos,eliminar_producto_db,modificar_producto_db
 from tkinter import messagebox
+from tkinter import simpledialog
 
 class GenerarProducto:
     def __init__(self, root):  
@@ -58,11 +58,8 @@ class GenerarProducto:
         LB_Stock = ttk.Label(self.frame_insercion, text="Stock:")
         LB_Stock.grid(row=2, column=2, padx=10, pady=10, sticky="w")
 
-        LB_Fecha = ttk.Label(self.frame_insercion, text="Fecha de Ingreso:")
-        LB_Fecha.grid(row=0, column=3, padx=10, pady=10, sticky="w")
-
         LB_Proveedor = ttk.Label(self.frame_insercion, text="Proveedor:")
-        LB_Proveedor.grid(row=2, column=3, padx=10, pady=10, sticky="w")
+        LB_Proveedor.grid(row=0, column=3, padx=10, pady=10, sticky="w")
 
         # Entradas
         self.entry_cod_barra = ttk.Entry(self.frame_insercion)
@@ -83,21 +80,17 @@ class GenerarProducto:
         self.entry_stock = ttk.Entry(self.frame_insercion)
         self.entry_stock.grid(row=3, column=2, padx=10, pady=10)
 
-        self.entry_fecha = ttk.Entry(self.frame_insercion)
-        self.entry_fecha.insert(0, datetime.now().strftime("%d/%m/%Y"))
-        self.entry_fecha.grid(row=1, column=3, padx=10, pady=10)
-
         self.combo_proveedor = ttk.Combobox(self.frame_insercion)
-        self.combo_proveedor.grid(row=3, column=3, padx=10, pady=10)
+        self.combo_proveedor.grid(row=1, column=3, padx=10, pady=10)
 
         # Botones 
         btn_enviar = ttk.Button(self.frame_insercion, text="Enviar", command=self.agregar_producto)
         btn_enviar.grid(row=0, column=6, padx=10, pady=20)
 
-        btn_modificar = ttk.Button(self.frame_insercion, text="Modificar")
+        btn_modificar = ttk.Button(self.frame_insercion, text="Modificar", command=self.modificar_producto)
         btn_modificar.grid(row=1, column=6, padx=5, pady=20)
 
-        btn_eliminar = ttk.Button(self.frame_insercion, text="Eliminar")
+        btn_eliminar = ttk.Button(self.frame_insercion, text="Eliminar", command=self.eliminar_producto)
         btn_eliminar.grid(row=2, column=6, padx=5, pady=20)
 
         btn_regresar = ttk.Button(self.frame_insercion, text="Regresar")
@@ -177,23 +170,113 @@ class GenerarProducto:
         self.combo_categoria['values'] = list(self.categorias_dict.keys())  # Solo nombres
  
     def agregar_producto(self):
+        # Obtener los datos de los widgets
         nombre = self.entry_nombre.get()
-        precio_compra = int(self.entry_precio_compra.get())  # Convertir a int
-        precio_venta = int(self.entry_precio_venta.get())    # Convertir a int
-        stock = int(self.entry_stock.get())                    # Convertir a int
         proveedor_nombre = self.combo_proveedor.get()
         categoria_nombre = self.combo_categoria.get()
-        codigo_barra = int(self.entry_cod_barra.get())        # Convertir a int
+
+        # Verificar que no haya campos vacíos
+        if not nombre or not proveedor_nombre or not categoria_nombre:
+            messagebox.showerror("Error", "Todos los campos son obligatorios")
+            return
+
+        # Manejar errores en las entradas numéricas
+        try:
+            precio_compra = int(self.entry_precio_compra.get())
+            precio_venta = int(self.entry_precio_venta.get())
+            stock = int(self.entry_stock.get())
+            codigo_barra = int(self.entry_cod_barra.get())
+        except ValueError:
+            messagebox.showerror("Error", "Por favor ingresa valores numéricos válidos en los campos de precio, stock y código de barra")
+            return
 
         # Obtener los ids de proveedor y categoría
         id_proveedor = self.proveedores_dict.get(proveedor_nombre)
         id_categoria = self.categorias_dict.get(categoria_nombre)
 
-        # Llama a la función enviar_producto con los ids
-        if enviar_producto(nombre, precio_compra, precio_venta, stock, codigo_barra, id_categoria, id_proveedor):
+        # Verificar que se hayan seleccionado proveedor y categoría correctamente
+        if id_proveedor is None or id_categoria is None:
+            messagebox.showerror("Error", "Selecciona un proveedor y una categoría válidos")
+            return
+
+        # Código para insertar el producto
+        try:
+            enviar_producto(nombre, precio_compra, precio_venta, stock, codigo_barra, id_categoria, id_proveedor)
             messagebox.showinfo("Éxito", "Producto agregado exitosamente")
+
+        except Exception as e:
+            print(f"Error inesperado: {e}")
+            messagebox.showerror("Error", f"Ocurrió un error inesperado: {e}")
+
+
+    def eliminar_producto(self):
+        selected_item = self.tree.selection()
+        if selected_item:
+            confirmacion = messagebox.askyesno("Confirmar", "¿Está seguro de que desea eliminar este producto?")
+            if confirmacion:
+                producto_id = self.tree.item(selected_item)['values'][0]
+                eliminar_producto_db(producto_id)  # Llamada a la función de eliminación
+                self.tree.delete(selected_item)
+                messagebox.showinfo("Éxito", "producto eliminado correctamente.")
         else:
-            messagebox.showerror("Error", "No se pudo agregar el producto")
+            messagebox.showwarning("Advertencia", "Por favor, seleccione un producto para eliminar.")
+
+    def modificar_producto(self):
+        selected_item = self.tree.selection()
+        if selected_item:
+            id_producto = self.tree.item(selected_item)['values'][0]  
+            # Obtener los datos actuales
+            cod_barra_actual = self.tree.item(selected_item)['values'][1]
+            nombre_actual = self.tree.item(selected_item)['values'][2]
+            categoria_actual = self.tree.item(selected_item)['values'][3]
+            precio_compra_actual = self.tree.item(selected_item)['values'][4]
+            precio_venta_actual = self.tree.item(selected_item)['values'][5]
+            stock_actual = self.tree.item(selected_item)['values'][6]
+            proveedor_actual = self.tree.item(selected_item)['values'][8]
+
+            # Establecer valores iniciales en los Combobox
+            self.combo_categoria.set(categoria_actual)
+            self.combo_proveedor.set(proveedor_actual)
+
+            self.cargar_proveedores_en_combobox()
+            self.cargar_categorias_en_combobox()
+
+            # Asegurarse de que los Combobox sean visibles y actualizados
+            self.combo_categoria.update_idletasks()
+            self.combo_proveedor.update_idletasks()
+
+            # Mostrar un cuadro de diálogo para ingresar nuevos datos
+            nuevo_codigo = simpledialog.askstring("Modificar producto", "Nuevo código:", initialvalue=cod_barra_actual)
+            nuevo_nombre = simpledialog.askstring("Modificar producto", "Nuevo nombre del producto:", initialvalue=nombre_actual)
+            nueva_categoria = self.combo_categoria.get()
+            nuevo_precio_compra = simpledialog.askstring("Modificar producto", "Nuevo precio de compra:", initialvalue=precio_compra_actual)
+            nuevo_precio_venta = simpledialog.askstring("Modificar producto", "Nuevo precio de venta:", initialvalue=precio_venta_actual)
+            nuevo_stock = simpledialog.askstring("Modificar producto", "Nuevo stock:", initialvalue=stock_actual)
+            nuevo_proveedor = self.combo_proveedor.get()
+
+            # Verificar que no haya campos vacíos
+            if not nuevo_codigo or not nuevo_nombre or not nueva_categoria or not nuevo_precio_compra or not nuevo_precio_venta or not nuevo_stock or not nuevo_proveedor:
+                messagebox.showerror("Error", "Todos los campos son obligatorios")
+                return
+
+            # Convertir valores a tipos adecuados
+            try:
+                nuevo_precio_compra = float(nuevo_precio_compra)
+                nuevo_precio_venta = float(nuevo_precio_venta)
+                nuevo_stock = int(nuevo_stock)
+            except ValueError:
+                messagebox.showerror("Error", "Precio y stock deben ser números válidos")
+                return
+
+            # Actualiza el producto en la base de datos
+            try:
+                modificar_producto_db(id_producto, nuevo_codigo, nuevo_nombre, self.categorias_dict[nueva_categoria], nuevo_precio_compra, nuevo_precio_venta, nuevo_stock, self.proveedores_dict[nuevo_proveedor])
+                messagebox.showinfo("Éxito", "Producto modificado exitosamente")
+                self.cargar_datos()  # Recargar datos para mostrar los cambios
+            except Exception as e:
+                print(f"Error inesperado: {e}")
+                messagebox.showerror("Error", f"Ocurrió un error inesperado: {e}")
+
 
 
 # Aquí deberías inicializar la ventana principal de la aplicación
