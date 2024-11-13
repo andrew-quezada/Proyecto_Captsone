@@ -37,8 +37,8 @@ class MenuNuevosIngresos:
         style.configure("Custom.TButton", font=fuente_personalizada, anchor="center")
 
         # Cargar y redimensionar íconos usando Pillow, guardándolos en el objeto self
-        self.icono_producto = ImageTk.PhotoImage(Image.open("mi_tienda/app/img/boxes.png").resize((50, 50)))
-        self.icono_proveedor = ImageTk.PhotoImage(Image.open("mi_tienda/app/img/user-add.png").resize((50, 50)))
+        self.icono_producto = ImageTk.PhotoImage(Image.open("app/img/boxes.png").resize((50, 50)))
+        self.icono_proveedor = ImageTk.PhotoImage(Image.open("app/img/user-add.png").resize((50, 50)))
 
         # Crear el botón con el ícono y el estilo personalizado
         boton1 = ttk.Button(self.contenedor, text="Nuevo producto", image=self.icono_producto, compound="top", 

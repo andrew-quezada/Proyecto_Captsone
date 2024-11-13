@@ -9,8 +9,8 @@ def create_connection():
             user="postgres",
             password="2001",
             connect_timeout=10,
-            sslmode="prefer"
-        )
+            sslmode="prefer")
+
         print("Conexión a la base de datos establecida.")
         return conn
     except psycopg2.OperationalError as e:

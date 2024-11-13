@@ -29,7 +29,7 @@ def cargar_proveedores(tree):
         try:
             with conn.cursor() as cursor:
                 # Consulta SQL para obtener los proveedores
-                sql = "SELECT id, nombre_completo, empresa, email, telefono FROM proveedores"
+                sql = "SELECT id, nombre_completo, empresa, email, telefono FROM proveedores order by proveedores"
                 cursor.execute(sql)
                 rows = cursor.fetchall()  # Obtener todos los proveedores
 

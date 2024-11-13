@@ -4,7 +4,7 @@ from tkinter import font as tkFont
 from PIL import Image, ImageTk
 import tkinter as tk
 from gui.Ingresar_Stock import IngresarStock
-from gui.reg_nuevo_prod import Reg_nuevo_prod
+from gui.menu_solicitudes import MenuSolicitudes
 from gui.menu_nuevos_ingreso import MenuNuevosIngresos
 
 class VentanaGerente:
@@ -49,25 +49,25 @@ class VentanaGerente:
         style.configure("Custom.TButton", font=fuente_personalizada, anchor="center")
 
         # Cargar y redimensionar los íconos usando Pillow
-        imagen1 = Image.open("mi_tienda/app/img/list-check.png")
+        imagen1 = Image.open("app/img/list-check.png")
         imagen_redimensionada = imagen1.resize((50, 50))
         icono1 = ImageTk.PhotoImage(imagen_redimensionada)
 
-        imagen2 = Image.open("mi_tienda/app/img/completed.png")
+        imagen2 = Image.open("app/img/completed.png")
         imagen_redimensionada = imagen2.resize((50, 50))
         icono2 = ImageTk.PhotoImage(imagen_redimensionada)
 
-        imagen3 = Image.open("mi_tienda/app/img/document.png")
+        imagen3 = Image.open("app/img/document.png")
         imagen_redimensionada = imagen3.resize((50, 50))
         icono3 = ImageTk.PhotoImage(imagen_redimensionada)
 
-        imagen4 = Image.open("mi_tienda/app/img/exit.png")
+        imagen4 = Image.open("app/img/exit.png")
         imagen_redimensionada = imagen4.resize((15, 15))
         icono4 = ImageTk.PhotoImage(imagen_redimensionada)
 
         # Crear los botones principales
         boton1 = ttk.Button(self.contenedor, text="Gestion\n    de \n Stock", image=icono1, compound="top", style="Custom.TButton", bootstyle=SUCCESS, command=self.open_ingresar_stock_window)
-        boton2 = ttk.Button(self.contenedor, text=" Consultas\n         y\nSolicitudes", image=icono2, compound="top", style="Custom.TButton", bootstyle=SUCCESS)
+        boton2 = ttk.Button(self.contenedor, text=" Consultas\n         y\nSolicitudes", image=icono2, compound="top", style="Custom.TButton", bootstyle=SUCCESS, command=self.open_menu_solicitudes_peticiones_window)
         boton3 = ttk.Button(self.contenedor, text="Nuevos\ningresos\n", image=icono3, compound="top", style="Custom.TButton", bootstyle=SUCCESS, command=self.open_nuevos_ingresos)
 
         # Botón "Cerrar sesión" en un frame aparte
@@ -98,10 +98,18 @@ class VentanaGerente:
         # Asegúrate de que al cerrar la ventana de Ingresar Stock, regrese a VentanaGerente
         new_root.protocol("WM_DELETE_WINDOW", lambda: self.on_close_window(new_root))
 
-    def open_nuevo_producto_window(self):
+    def open_menu_solicitudes_peticiones_window(self):
         self.root.withdraw()  # Oculta la ventana actual (VentanaGerente)
         new_root = ttk.Toplevel(self.root)  # Crea una nueva ventana hija para Ingresar nuevo producto
-        Reg_nuevo_prod(new_root)
+        MenuSolicitudes(new_root)
+
+        # Asegúrate de que al cerrar la ventana de Ingresar nuevo producto, regrese a VentanaGerente
+        new_root.protocol("WM_DELETE_WINDOW", lambda: self.on_close_window(new_root))
+
+    def open_nuevos_ingresos(self):
+        self.root.withdraw()  # Oculta la ventana actual (VentanaGerente)
+        new_root = ttk.Toplevel(self.root)  # Crea una nueva ventana hija para Ingresar nuevo producto y proveedor
+        MenuNuevosIngresos(new_root)
 
         # Asegúrate de que al cerrar la ventana de Ingresar nuevo producto, regrese a VentanaGerente
         new_root.protocol("WM_DELETE_WINDOW", lambda: self.on_close_window(new_root))
@@ -109,14 +117,6 @@ class VentanaGerente:
     def on_close_window(self, window):
         window.destroy()  # Cierra la ventana
         self.root.deiconify()  # Muestra la ventana de gerente de nuevo
-
-    def open_nuevos_ingresos(self):
-        self.root.withdraw()  # Oculta la ventana actual (VentanaGerente)
-        new_root = ttk.Toplevel(self.root)  # Crea una nueva ventana hija para Ingresar nuevo producto
-        MenuNuevosIngresos(new_root)
-
-        # Asegúrate de que al cerrar la ventana de Ingresar nuevo producto, regrese a VentanaGerente
-        new_root.protocol("WM_DELETE_WINDOW", lambda: self.on_close_window(new_root))
 
 if __name__ == "__main__":
     root = ttk.Window(themename="superhero")
