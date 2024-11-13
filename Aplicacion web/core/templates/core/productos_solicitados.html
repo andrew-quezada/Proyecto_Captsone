@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Productos Solicitados</title>
+
+    {% load static %}
+    
+    <link rel="stylesheet" href="{% static 'core/Style.css' %}">
+</head>
+<body>
+    <h1>Productos Solicitados</h1>
+    
+    <div class="product-grid">
+        {% for producto in productos_solicitados %}
+        <div class="product-card">
+            <h2>{{ producto.nombre_producto }}</h2>
+            <p>Cantidad: {{ producto.cantidad }}</p>
+            <p>Proveedor: {{ producto.proveedor.nombre }}</p>
+        </div>
+        {% empty %}
+        <p>No hay productos solicitados.</p>
+        {% endfor %}
+    </div>
+
+    <a href="{% url 'menu_empleado' %}" class="back-button">Volver al Menú</a>
+</body>
+</html>

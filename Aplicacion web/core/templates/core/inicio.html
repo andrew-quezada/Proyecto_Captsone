@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    {% load static %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inicio de Sesión</title>
+    <link rel="stylesheet" href="{% static 'core/inicio_style.css' %}">
+    <script src="{% static 'core/Script.js' %}"></script>
+    <script src="{% static 'core/Script2.js' %}"></script>
+</head>
+<body>
+    <div class="login-container">
+        <div class="titulo">
+            <h2>Bienvenido a Panaderia Madrileña</h2>
+        </div>
+        <form method="POST" action="{% url 'validar_usuario' %}">
+            {% csrf_token %}
+            <div class="input_login">
+                <input type="text" placeholder="Usuario" id="nombre_usuario" name="nombre_usuario" required>
+            </div>
+            <div class="input_login">
+                <input type="password" placeholder="Contraseña" id="contrasena" name="contrasena" required>
+            </div>
+            <button class="btn_iniciar" type="submit" id="Iniciar">Iniciar</button>
+        </form>
+    </div>
+</body>
+</html>
+

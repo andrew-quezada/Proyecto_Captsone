@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Menú Empleado</title>
+  
+  <!-- Cargar archivos estáticos -->
+  {% load static %}
+  
+  <!-- Enlace al archivo CSS principal -->
+  <link rel="stylesheet" href="{% static 'core/style.css' %}">
+</head>
+<body>
+
+  <!-- Header -->
+  <header>
+        <div class="menu" onclick="openMenu()">&#9776;</div>
+        <div class="titulo">TEXTO DE EMPRESA</div>
+        <div class="usuario">
+        <div class="division">
+            <span class="presentacion">Bienvenido</span>
+            <span class="nombres">Usuario</span>
+        </div>
+        </div>
+  </header>  
+
+  <!-- Menú lateral -->
+  <div id="sideMenu" class="side-menu">
+    <!-- Botón para cerrar el menú lateral -->
+    <a href="javascript:void(0)" class="close-btn" onclick="closeMenu()">&times;</a>
+    
+    <!-- Opciones del menú lateral -->
+    <ul>
+      <li><a href="{% url 'stock_tienda' %}">Stock Tienda</a></li>
+      <li><a href="{% url 'productos_solicitados' %}">Stock solicitado</a></li>
+      <li><a href="{% url 'inicio' %}">Cerrar sesión <span>&#8634;</span></a></li>
+    </ul>
+  </div>
+
+  <!-- Contenido principal -->
+  <main class="contenedor">
+
+    <!-- Sección de principales ventas -->
+    <section class="ventas">
+      <h3>Principales ventas</h3>
+      <!-- Producto más vendido -->
+      <div class="producto">
+        <span class="producto-nombre">Producto más vendido</span>
+        <span class="producto-detalle">Mes</span>
+        <span class="producto-cantidad">102</span>
+        <span class="producto-codigo">[código]</span>
+      </div>
+      <!-- Producto menos vendido -->
+      <div class="producto">
+        <span class="producto-nombre">Producto menos vendido</span>
+        <span class="producto-detalle">Mes</span>
+        <span class="producto-cantidad">5</span>
+        <span class="producto-codigo">[código]</span>
+      </div>
+    </section>
+
+    <!-- Sección de mensajes -->
+    <section class="mensajes">
+      <h3>Mensajes</h3>
+      
+      <!-- Mensaje de pedido realizado -->
+      <article class="mensaje pedido">
+        <p class="fecha">Fecha: 14 de agosto de 2024 (Hoy)</p>
+        <p>El pedido para reponer el stock del producto [código] ha sido realizado.</p>
+      </article>
+      
+      <article class="mensaje stock-critico">
+        <p class="fecha">Fecha: 31 de julio de 2024</p>
+        <p>El stock del producto [código] ha alcanzado un nivel crítico.</p>
+      </article>
+      
+      <article class="mensaje vencer">
+        <p class="fecha">Fecha: 20 de julio de 2024</p>
+        <p>El producto [código] está próximo a vencer.</p>
+      </article>
+      
+    </section>
+
+  </main>
+
+  <!-- Cargar archivo JavaScript para el menú -->
+  <script src="{% static 'core/menu.js' %}"></script>
+
+  <!-- Funciones JavaScript -->
+  <script>
+    // Función para abrir el menú lateral
+    function openMenu() {
+      document.getElementById("sideMenu").style.width = "250px";
+    }
+
+    // Función para cerrar el menú lateral
+    function closeMenu() {
+      document.getElementById("sideMenu").style.width = "0";
+    }
+  </script>
+
+</body>
+</html>

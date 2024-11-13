@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Stock</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'core/style.css' %}">
+</head>
+<body>
+    <div class="stock-container">
+        <h1>Gestión de Stock</h1>
+        
+        <table class="stock-admin-table">
+            <thead>
+                <tr>
+                    <th>Producto</th>
+                    <th>Cantidad Disponible</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for producto in productos_stock %}
+                <tr>
+                    <td>{{ producto.nombre }}</td>
+                    <td>{{ producto.cantidad_disponible }}</td>
+                    <td>
+                        <a href="{% url 'editar_producto_stock' producto.id %}" class="stock-edit-btn">Editar</a>
+                        <a href="{% url 'eliminar_producto_stock' producto.id %}" class="stock-delete-btn">Eliminar</a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="3">No hay productos en stock.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <a href="{% url 'menu_administrador' %}" class="stock-back-btn">Volver al Menú</a>
+    </div>
+</body>
+</html>

@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Predicción de Demanda - Administrador</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'core/style.css' %}">
+</head>
+<body>
+    <div class="sidebar">
+        <a href="{% url 'menu_administrador' %}" class="back-button">Volver al Menú Administrador</a>
+    </div>
+    <div class="content">
+        <div class="demand-container">
+            <h1>Predicción de Demanda - Administrador</h1>
+            <div class="demand-chart-container">
+                <div class="demand-chart">
+                    <h2>Productos Más Vendidos</h2>
+                    <canvas id="productosMasVendidos"></canvas>
+                </div>
+                <div class="demand-chart">
+                    <h2>Productos Menos Vendidos</h2>
+                    <canvas id="productosMenosVendidos"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // Datos para el gráfico de productos más vendidos
+        const productosMasVendidos = {{ productos_mas_vendidos|safe }};
+        const nombresMasVendidos = productosMasVendidos.map(producto => producto.nombre);
+        const cantidadesMasVendidos = productosMasVendidos.map(producto => producto.cantidad_vendida);
+
+        // Datos para el gráfico de productos menos vendidos
+        const productosMenosVendidos = {{ productos_menos_vendidos|safe }};
+        const nombresMenosVendidos = productosMenosVendidos.map(producto => producto.nombre);
+        const cantidadesMenosVendidos = productosMenosVendidos.map(producto => producto.cantidad_vendida);
+
+        // Gráfico de productos más vendidos
+        const productosMasVendidosCtx = document.getElementById('productosMasVendidos').getContext('2d');
+        new Chart(productosMasVendidosCtx, {
+            type: 'bar',
+            data: {
+                labels: nombresMasVendidos,
+                datasets: [{
+                    label: 'Cantidad Vendida',
+                    data: cantidadesMasVendidos,
+                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+
+        // Gráfico de productos menos vendidos
+        const productosMenosVendidosCtx = document.getElementById('productosMenosVendidos').getContext('2d');
+        new Chart(productosMenosVendidosCtx, {
+            type: 'bar',
+            data: {
+                labels: nombresMenosVendidos,
+                datasets: [{
+                    label: 'Cantidad Vendida',
+                    data: cantidadesMenosVendidos,
+                    backgroundColor: nombresMenosVendidos.map((nombre, index) =>
+                        index === 0 ? 'rgba(255, 0, 0, 0.6)' : 'rgba(255, 99, 132, 0.2)'
+                    ),
+                    borderColor: 'rgba(255, 99, 132, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stock Tienda</title>
+
+    {% load static %}
+
+    <link rel="stylesheet" href="{% static 'core/style.css' %}">
+</head>
+<body class="page-employee">
+    <div class="employee-container">
+        <h1 class="employee-title">Stock Disponible en Tienda</h1>
+        
+        <table class="employee-product-table">
+            <thead>
+                <tr>
+                    <th>Nombre del Producto</th>
+                    <th>Cantidad Disponible</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for producto in productos_tienda %}
+                <tr>
+                    <td>{{ producto.nombre }}</td>
+                    <td>{{ producto.cantidad_disponible }}</td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="2">No hay productos disponibles en la tienda.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <a href="{% url 'menu_empleado' %}" class="employee-back-button">Volver al Menú</a>
+    </div>
+</body>
+</html>

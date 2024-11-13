@@ -1,0 +1,56 @@
+/* Encapsula los estilos de login dentro de .login-container */
+.login-container {
+  /* Estilo general para el contenedor del login */
+  max-width: 400px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  font-family: Arial, sans-serif;
+}
+
+.login-container .titulo {
+  font-size: 1.8em;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+.login-container .input_login {
+  margin-bottom: 15px;
+}
+
+.login-container .input_login input {
+  width: 100%;
+  padding: 10px;
+  border-radius: 4px;
+  border: 1px solid #ddd;
+  font-size: 1em;
+}
+
+.login-container .btn_iniciar {
+  width: 100%;
+  padding: 10px;
+  border-radius: 4px;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  font-size: 1em;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.login-container .btn_iniciar:hover {
+  background-color: #45a049;
+}
+
+.login-container .forgot-password {
+  font-size: 0.9em;
+  color: #666;
+  text-decoration: none;
+}
+
+.login-container .forgot-password:hover {
+  text-decoration: underline;
+}
