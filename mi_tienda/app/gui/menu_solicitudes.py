@@ -119,7 +119,7 @@ class MenuSolicitudes:
                 messagebox.showerror("Error", "ID de proveedor no válido.")
                 return
 
-            productos = cargar_productos_por_proveedor(id_proveedor)  # Llama a tu función para cargar productos
+            productos = cargar_productos_por_proveedor(id_proveedor)  # Llama a la función para cargar productos
 
             if productos:
                 self.combo_producto['values'] = [f"{p[1]} - $ {p[2]}" for p in productos]  # Asigna nombre y precio
