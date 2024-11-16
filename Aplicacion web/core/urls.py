@@ -3,8 +3,8 @@ from django.contrib.auth import views as auth_views
 from . import views
 
 urlpatterns = [
-    path('', views.inicio, name='inicio'),
-    path('validar_usuario/', views.validar_usuario, name='validar_usuario'),
+    path('', views.validacion_usuario, name='validar_usuario'),  # Esto debe coincidir con la vista de validación de usuario
+    path('inicio/', views.inicio, name='inicio'),  # Esta es la URL que usa tu página de inicio de sesión
     path('menu_empleado/', views.menu_empleado, name='menu_empleado'),
     path('menu_administrador/', views.menu_administrador, name='menu_administrador'),
     path('logout/', auth_views.LogoutView.as_view(next_page='inicio'), name='logout'),

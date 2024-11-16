@@ -12,19 +12,29 @@
 <body>
     <div class="login-container">
         <div class="titulo">
-            <h2>Bienvenido a Panaderia Madrileña</h2>
+            <h2>Bienvenido a Panadería Madrileña</h2>
         </div>
+
+        <!-- Mostrar mensajes de error si existen -->
+        {% if messages %}
+        <div class="mensaje-error">
+            {% for message in messages %}
+                <p>{{ message }}</p>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        <!-- Formulario de inicio de sesión -->
         <form method="POST" action="{% url 'validar_usuario' %}">
             {% csrf_token %}
             <div class="input_login">
-                <input type="text" placeholder="Usuario" id="nombre_usuario" name="nombre_usuario" required>
+                <input type="text" placeholder="Usuario" id="nombre_usuario" name="username" required>
             </div>
             <div class="input_login">
-                <input type="password" placeholder="Contraseña" id="contrasena" name="contrasena" required>
+                <input type="password" placeholder="Contraseña" id="contrasena" name="password" required>
             </div>
             <button class="btn_iniciar" type="submit" id="Iniciar">Iniciar</button>
         </form>
     </div>
 </body>
 </html>
-

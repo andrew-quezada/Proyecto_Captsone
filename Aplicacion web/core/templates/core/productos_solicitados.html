@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Productos Solicitados</title>
-
+    
     {% load static %}
     
     <link rel="stylesheet" href="{% static 'core/Style.css' %}">
@@ -15,9 +15,10 @@
     <div class="product-grid">
         {% for producto in productos_solicitados %}
         <div class="product-card">
-            <h2>{{ producto.nombre_producto }}</h2>
-            <p>Cantidad: {{ producto.cantidad }}</p>
-            <p>Proveedor: {{ producto.proveedor.nombre }}</p>
+            <h2>Código Solicitud: {{ producto.codigo_solicitud }}</h2>
+            <p>Proveedor: {{ producto.proveedor.nombre_completo }}</p>
+            <p>Estado: {{ producto.estado.descripcion }}</p>
+            <p>Fecha de Solicitud: {{ producto.fecha_solicitud }}</p>
         </div>
         {% empty %}
         <p>No hay productos solicitados.</p>

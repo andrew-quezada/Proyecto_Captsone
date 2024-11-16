@@ -17,18 +17,22 @@
             <thead>
                 <tr>
                     <th>Nombre del Producto</th>
-                    <th>Cantidad Disponible</th>
+                    <th>Stock Disponible</th>
+                    <th>Precio de Compra</th>
+                    <th>Precio de Venta</th>
                 </tr>
             </thead>
             <tbody>
                 {% for producto in productos_tienda %}
                 <tr>
                     <td>{{ producto.nombre }}</td>
-                    <td>{{ producto.cantidad_disponible }}</td>
+                    <td>{{ producto.stock }}</td>
+                    <td>{{ producto.precio_compra }}</td>
+                    <td>{{ producto.precio_venta }}</td>
                 </tr>
                 {% empty %}
                 <tr>
-                    <td colspan="2">No hay productos disponibles en la tienda.</td>
+                    <td colspan="4">No hay productos disponibles en la tienda.</td>
                 </tr>
                 {% endfor %}
             </tbody>

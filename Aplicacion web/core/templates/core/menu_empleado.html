@@ -64,22 +64,32 @@
     <section class="mensajes">
       <h3>Mensajes</h3>
       
-      <!-- Mensaje de pedido realizado -->
-      <article class="mensaje pedido">
-        <p class="fecha">Fecha: 14 de agosto de 2024 (Hoy)</p>
-        <p>El pedido para reponer el stock del producto [código] ha sido realizado.</p>
-      </article>
-      
+      <!-- Mensaje de stock crítico -->
       <article class="mensaje stock-critico">
         <p class="fecha">Fecha: 31 de julio de 2024</p>
-        <p>El stock del producto [código] ha alcanzado un nivel crítico.</p>
+        <p>
+          El stock del producto [código] ha alcanzado un nivel crítico.
+          Mínimo permitido: {{ producto.stock_minimo }}.
+        </p>
       </article>
       
-      <article class="mensaje vencer">
+      <!-- Mensaje de stock por encima del máximo -->
+      <article class="mensaje stock-exceso">
         <p class="fecha">Fecha: 20 de julio de 2024</p>
-        <p>El producto [código] está próximo a vencer.</p>
+        <p>
+          El producto [código] ha excedido el nivel máximo permitido:
+          {{ producto.stock_maximo }}.
+        </p>
       </article>
       
+      <!-- Mensaje de comparación de stock -->
+      <article class="mensaje comparativo">
+        <p class="fecha">Fecha: 14 de agosto de 2024 (Hoy)</p>
+        <p>
+          El stock del producto [código] es {{ producto.nivel_comparativo }},
+          comparado con el nivel actual: {{ producto.stock }}.
+        </p>
+      </article>
     </section>
 
   </main>

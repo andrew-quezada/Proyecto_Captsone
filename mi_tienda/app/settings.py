@@ -9,15 +9,19 @@ def create_connection():
             user="postgres",
             password="2001",
             connect_timeout=10,
-            sslmode="prefer"
+            sslmode="prefer",
+            client_encoding="UTF8"
         )
         print("Conexión a la base de datos establecida.")
         return conn
     except psycopg2.OperationalError as e:
-        print(f"Error al conectar a la base de datos: {e}")
+        print("Error al conectar a la base de datos.")
+        print(f"Detalles del error: {e}")
         return None
 
 def close_connection(conn):
     if conn:
         conn.close()
         print("Conexión a la base de datos cerrada.")
+    else:
+        print("No hay conexión activa para cerrar.")
