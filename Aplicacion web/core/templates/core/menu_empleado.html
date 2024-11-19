@@ -15,14 +15,14 @@
 
   <!-- Header -->
   <header>
-        <div class="menu" onclick="openMenu()">&#9776;</div>
-        <div class="titulo">TEXTO DE EMPRESA</div>
-        <div class="usuario">
-        <div class="division">
-            <span class="presentacion">Bienvenido</span>
-            <span class="nombres">Usuario</span>
-        </div>
-        </div>
+    <div class="menu" onclick="openMenu()">&#9776;</div>
+    <div class="titulo">TEXTO DE EMPRESA</div>
+    <div class="usuario">
+      <div class="division">
+        <span class="presentacion">Bienvenido</span>
+        <span class="nombres">Usuario</span>
+      </div>
+    </div>
   </header>  
 
   <!-- Menú lateral -->
@@ -46,17 +46,17 @@
       <h3>Principales ventas</h3>
       <!-- Producto más vendido -->
       <div class="producto">
-        <span class="producto-nombre">Producto más vendido</span>
-        <span class="producto-detalle">Mes</span>
-        <span class="producto-cantidad">102</span>
-        <span class="producto-codigo">[código]</span>
+        <span class="producto-nombre">Producto más vendido:</span>
+        <span class="producto-detalle">Fecha ingreso: {{ producto_mas_vendido.fecha_ingreso }}</span>
+        <span class="producto-cantidad">Stock: {{ producto_mas_vendido.stock }}</span>
+        <span class="producto-codigo">ID: {{ producto_mas_vendido.id_producto }}</span>
       </div>
       <!-- Producto menos vendido -->
       <div class="producto">
-        <span class="producto-nombre">Producto menos vendido</span>
-        <span class="producto-detalle">Mes</span>
-        <span class="producto-cantidad">5</span>
-        <span class="producto-codigo">[código]</span>
+        <span class="producto-nombre">Producto menos vendido:</span>
+        <span class="producto-detalle">Fecha ingreso: {{ producto_menos_vendido.fecha_ingreso }}</span>
+        <span class="producto-cantidad">Stock: {{ producto_menos_vendido.stock }}</span>
+        <span class="producto-codigo">ID: {{ producto_menos_vendido.id_producto }}</span>
       </div>
     </section>
 
@@ -64,32 +64,14 @@
     <section class="mensajes">
       <h3>Mensajes</h3>
       
-      <!-- Mensaje de stock crítico -->
-      <article class="mensaje stock-critico">
-        <p class="fecha">Fecha: 31 de julio de 2024</p>
-        <p>
-          El stock del producto [código] ha alcanzado un nivel crítico.
-          Mínimo permitido: {{ producto.stock_minimo }}.
-        </p>
+      {% for mensaje in mensajes %}
+      <article class="mensaje">
+        <p class="fecha">Fecha: {{ mensaje.fecha }}</p>
+        <p>{{ mensaje.mensaje }}</p>
       </article>
-      
-      <!-- Mensaje de stock por encima del máximo -->
-      <article class="mensaje stock-exceso">
-        <p class="fecha">Fecha: 20 de julio de 2024</p>
-        <p>
-          El producto [código] ha excedido el nivel máximo permitido:
-          {{ producto.stock_maximo }}.
-        </p>
-      </article>
-      
-      <!-- Mensaje de comparación de stock -->
-      <article class="mensaje comparativo">
-        <p class="fecha">Fecha: 14 de agosto de 2024 (Hoy)</p>
-        <p>
-          El stock del producto [código] es {{ producto.nivel_comparativo }},
-          comparado con el nivel actual: {{ producto.stock }}.
-        </p>
-      </article>
+      {% empty %}
+      <p>No hay mensajes disponibles.</p>
+      {% endfor %}
     </section>
 
   </main>

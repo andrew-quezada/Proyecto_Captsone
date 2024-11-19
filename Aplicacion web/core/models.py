@@ -39,47 +39,60 @@ class ProductoInventario(models.Model):
 
 #Clase Usuario para ingresar como empleado o administrador
 class Usuario(models.Model):
-    id_usuario = models.AutoField(primary_key=True)
-    nombre_usuario = models.CharField(max_length=100, unique=True)
-    contrasena = models.CharField(max_length=255)
+    id_usuario = models.AutoField(primary_key=True, db_column='id_usuario')
+    nombre_usuario = models.CharField(max_length=100, unique=True, db_column='nombre_usuario')
+    contrasena = models.CharField(max_length=255, db_column='contrasena')
 
     class Meta:
-        db_table = 'usuarios'
-        managed = False
+        db_table = 'usuarios'  # Asegura que el nombre coincida con la tabla en PostgreSQL
+        managed = False  # Evita que Django intente gestionar la tabla
+        verbose_name = 'Usuario'
+        verbose_name_plural = 'Usuarios'
 
     def __str__(self):
         return self.nombre_usuario
 
 # Clase Cargo
 class Cargo(models.Model):
-    id_cargo = models.AutoField(primary_key=True)
-    tipo_de_cargo = models.CharField(max_length=100)
+    id_cargo = models.AutoField(primary_key=True)  
+    tipo_de_cargo = models.CharField(max_length=100)  
 
     class Meta:
-        db_table = 'cargos'  # Coincide con la tabla en PostgreSQL
-        managed = False  # Evitar que Django gestione esta tabla
+        db_table = 'cargos'  # El nombre exacto de la tabla en la base de datos
+        managed = False  # Django no manejará la creación/modificación de esta tabla
+        verbose_name = 'Cargo'
+        verbose_name_plural = 'Cargos'
+
+    def __str__(self):
+        return self.tipo_de_cargo
 
 # Clase Empleado
 class Empleado(models.Model):
-    id_empleado = models.AutoField(primary_key=True)
-    rut = models.CharField(max_length=12, unique=True)
-    nombre = models.CharField(max_length=100)
-    apellido = models.CharField(max_length=100)
-    fecha_nacimiento = models.DateField()
-    genero = models.CharField(max_length=1, null=True, blank=True)
-    direccion = models.CharField(max_length=200, null=True, blank=True)
-    telefono = models.CharField(max_length=15, null=True, blank=True)
-    email = models.EmailField(max_length=100, unique=True, null=True, blank=True)
-    fecha_contratacion = models.DateField()
-    salario = models.IntegerField()
-    estado = models.CharField(max_length=20, default='Activo', null=True, blank=True)
-    fecha_termino_contrato = models.DateField(null=True, blank=True)
-    id_cargo = models.ForeignKey('Cargo', on_delete=models.SET_NULL, null=True, blank=True)
-    id_usuario = models.ForeignKey('Usuario', on_delete=models.SET_NULL, null=True, blank=True, db_column='id_usuario')
+    id_empleado = models.AutoField(primary_key=True, db_column='id_empleado')
+    rut = models.CharField(max_length=12, unique=True, db_column='rut')
+    nombre = models.CharField(max_length=100, db_column='nombre')
+    apellido = models.CharField(max_length=100, db_column='apellido')
+    fecha_nacimiento = models.DateField(db_column='fecha_nacimiento')
+    genero = models.CharField(max_length=1, null=True, blank=True, db_column='genero')
+    direccion = models.CharField(max_length=200, null=True, blank=True, db_column='direccion')
+    telefono = models.CharField(max_length=15, null=True, blank=True, db_column='telefono')
+    email = models.EmailField(max_length=100, unique=True, null=True, blank=True, db_column='email')
+    fecha_contratacion = models.DateField(db_column='fecha_contratacion')
+    salario = models.IntegerField(db_column='salario')
+    estado = models.CharField(max_length=20, default='Activo', null=True, blank=True, db_column='estado')
+    fecha_termino_contrato = models.DateField(null=True, blank=True, db_column='fecha_termino_contrato')
+    id_cargo = models.ForeignKey('Cargo', on_delete=models.SET_NULL, null=True, blank=True,db_column='id_cargo')
+    id_usuario = models.OneToOneField('Usuario', on_delete=models.SET_NULL,null=True,blank=True,db_column='id_usuario'
+    )
 
     class Meta:
-        db_table = 'empleados'
-        managed = False
+        db_table = 'empleados'  # Nombre exacto de la tabla en la base de datos
+        managed = False  # Evita que Django intente gestionar la tabla
+        verbose_name = 'Empleado'
+        verbose_name_plural = 'Empleados'
+
+    def __str__(self):
+        return f"{self.nombre} {self.apellido} ({self.rut})"
 
 
 # Clase Categoria
@@ -91,7 +104,6 @@ class Categoria(models.Model):
         db_table = 'categoria'  # Nombre exacto de la tabla en la base de datos
         managed = False  # Django no manejará las migraciones para esta tabla
 
-from django.db import models
 
 # Clase Producto que representa la tabla productos en la base de datos
 class Producto(models.Model):
@@ -100,13 +112,13 @@ class Producto(models.Model):
     precio_compra = models.IntegerField(null=True, blank=True)
     precio_venta = models.IntegerField(null=True, blank=True)
     stock = models.IntegerField(null=True, blank=True)
+    cod_barra = models.IntegerField(null=True, blank=True)
+    id_categoria = models.IntegerField(null=True, blank=True)  # Puedes cambiar esto a una relación con el modelo Categoria si aplica
+    proveedor_id = models.IntegerField(null=True, blank=True)
+    fecha_ingreso = models.DateTimeField(auto_now_add=True)
     stock_minimo = models.IntegerField(default=0, null=True, blank=True)  # Nuevo atributo
     stock_maximo = models.IntegerField(default=100, null=True, blank=True)  # Nuevo atributo
     nivel_comparativo = models.IntegerField(default=0, null=True, blank=True)  # Nuevo atributo
-    cod_barra = models.IntegerField(null=True, blank=True)
-    id_categoria = models.IntegerField(null=True, blank=True)  # Podrías cambiar esto a una relación con el modelo Categoria si es aplicable
-    proveedor_id = models.IntegerField(null=True, blank=True)
-    fecha_ingreso = models.DateTimeField(auto_now_add=True)
 
     class Meta:
         db_table = 'productos'  # Nombre exacto de la tabla en la base de datos
@@ -155,4 +167,18 @@ class SolicitudProducto(models.Model):
     def __str__(self):
         return self.codigo_solicitud
 
+# Clase venta producto para predicción demanda
+class VentaProducto(models.Model):
+    id_venta = models.AutoField(primary_key=True)
+    id_producto = models.ForeignKey(
+        'Producto', on_delete=models.CASCADE, db_column='id_producto'
+    )
+    cantidad_vendida = models.IntegerField(default=0)
+    fecha_venta = models.DateField(auto_now_add=True)
 
+    class Meta:
+        db_table = 'ventas_productos'
+        managed = False  # No gestionará migraciones en esta tabla
+
+    def __str__(self):
+        return f"Producto ID: {self.id_producto.id_producto} - Cantidad Vendida: {self.cantidad_vendida}"

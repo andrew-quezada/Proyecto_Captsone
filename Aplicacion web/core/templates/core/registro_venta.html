@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro de Ventas</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'core/style.css' %}">
+</head>
+<body>
+    <div class="registro-container">
+        <h1>Registro de Ventas</h1>
+        <form method="POST" action="{% url 'registro_venta' %}">
+            {% csrf_token %}
+            <label for="producto">Producto:</label>
+            <select id="producto" name="producto">
+                {% for producto in productos %}
+                <option value="{{ producto.id_producto }}">{{ producto.nombre }}</option>
+                {% endfor %}
+            </select>
+            <label for="cantidad">Cantidad Vendida:</label>
+            <input type="number" id="cantidad" name="cantidad" min="1" required>
+            <button type="submit">Registrar Venta</button>
+        </form>
+    </div>
+</body>
+</html>

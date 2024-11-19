@@ -8,25 +8,48 @@
     <link rel="stylesheet" href="{% static 'core/style.css' %}">
 </head>
 <body>
+    <!-- Barra lateral -->
     <div class="sidebar">
         <a href="{% url 'menu_administrador' %}" class="back-button">Volver al Menú Administrador</a>
     </div>
+    <!-- Contenido principal -->
     <div class="content">
         <div class="demand-container">
             <h1>Predicción de Demanda - Administrador</h1>
             <div class="demand-chart-container">
+                <!-- Gráfico de productos más vendidos -->
                 <div class="demand-chart">
                     <h2>Productos Más Vendidos</h2>
+                    <ul>
+                        {% for producto in productos_mas_vendidos %}
+                        <li>
+                            {{ producto.nombre }} (ID: {{ producto.id_producto }}) - Vendidos: {{ producto.cantidad_vendida }}
+                        </li>
+                        {% empty %}
+                        <p>No hay productos más vendidos registrados.</p>
+                        {% endfor %}
+                    </ul>
                     <canvas id="productosMasVendidos"></canvas>
                 </div>
+                <!-- Gráfico de productos menos vendidos -->
                 <div class="demand-chart">
                     <h2>Productos Menos Vendidos</h2>
+                    <ul>
+                        {% for producto in productos_menos_vendidos %}
+                        <li>
+                            {{ producto.nombre }} (ID: {{ producto.id_producto }}) - Vendidos: {{ producto.cantidad_vendida }}
+                        </li>
+                        {% empty %}
+                        <p>No hay productos menos vendidos registrados.</p>
+                        {% endfor %}
+                    </ul>
                     <canvas id="productosMenosVendidos"></canvas>
                 </div>
             </div>
         </div>
     </div>
 
+    <!-- Librería Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
         // Datos para el gráfico de productos más vendidos
