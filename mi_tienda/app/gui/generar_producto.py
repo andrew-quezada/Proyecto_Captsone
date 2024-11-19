@@ -55,11 +55,14 @@ class GenerarProducto:
         LB_PrecioVenta = ttk.Label(self.frame_insercion, text="Precio de Venta:")
         LB_PrecioVenta.grid(row=0, column=2, padx=10, pady=10, sticky="w")
 
-        LB_Stock = ttk.Label(self.frame_insercion, text="Stock:")
+        LB_Stock = ttk.Label(self.frame_insercion, text="Stock por paquete:")
         LB_Stock.grid(row=2, column=2, padx=10, pady=10, sticky="w")
 
         LB_Proveedor = ttk.Label(self.frame_insercion, text="Proveedor:")
         LB_Proveedor.grid(row=0, column=3, padx=10, pady=10, sticky="w")
+
+        LB_Nuevo_stock = ttk.Label(self.frame_insercion, text="Stock actual:")
+        LB_Nuevo_stock.grid(row=2, column=3, padx=10, pady=10, sticky="w")
 
         # Entradas
         self.entry_cod_barra = ttk.Entry(self.frame_insercion)
@@ -83,6 +86,9 @@ class GenerarProducto:
         self.combo_proveedor = ttk.Combobox(self.frame_insercion)
         self.combo_proveedor.grid(row=1, column=3, padx=10, pady=10)
 
+        self.entry_nuevo_stock = ttk.Entry(self.frame_insercion)
+        self.entry_nuevo_stock.grid(row=3, column=3, padx=10, pady=10)
+
         # Botones 
         btn_enviar = ttk.Button(self.frame_insercion, text="Enviar", command=self.agregar_producto)
         btn_enviar.grid(row=0, column=6, padx=10, pady=20)
@@ -100,7 +106,7 @@ class GenerarProducto:
         # Aquí eliminamos la segunda declaración de self.frame_tabla
 
         # Definir las columnas del Treeview
-        self.tree = ttk.Treeview(self.frame_tabla, columns=("id", "codigo", "nombre", "categoria", "precio_compra", "precio_venta", "stock", "fecha_ingreso", "proveedor"), show="headings")
+        self.tree = ttk.Treeview(self.frame_tabla, columns=("id", "codigo", "nombre", "categoria", "precio_compra", "precio_venta", "stock","nuevo_stock", "fecha_ingreso", "proveedor"), show="headings")
         
         # Configuración de encabezados
         self.tree.heading("id", text="ID")
@@ -109,7 +115,8 @@ class GenerarProducto:
         self.tree.heading("categoria", text="Categoría")
         self.tree.heading("precio_compra", text="Precio de Compra")
         self.tree.heading("precio_venta", text="Precio de Venta")
-        self.tree.heading("stock", text="Stock")
+        self.tree.heading("stock", text="stock por paquete")
+        self.tree.heading("nuevo_stock", text="stock")
         self.tree.heading("fecha_ingreso", text="Fecha de Ingreso")
         self.tree.heading("proveedor", text="Proveedor")
 
@@ -121,6 +128,7 @@ class GenerarProducto:
         self.tree.column("precio_compra", width=100)
         self.tree.column("precio_venta", width=100)
         self.tree.column("stock", width=100)
+        self.tree.column("nuevo_stock", width=100)
         self.tree.column("fecha_ingreso", width=100)
         self.tree.column("proveedor", width=100)
 
@@ -185,6 +193,7 @@ class GenerarProducto:
             precio_compra = int(self.entry_precio_compra.get())
             precio_venta = int(self.entry_precio_venta.get())
             stock = int(self.entry_stock.get())
+            nuevo_stock = int(self.entry_nuevo_stock.get())
             codigo_barra = int(self.entry_cod_barra.get())
         except ValueError:
             messagebox.showerror("Error", "Por favor ingresa valores numéricos válidos en los campos de precio, stock y código de barra")
@@ -201,7 +210,7 @@ class GenerarProducto:
 
         # Código para insertar el producto
         try:
-            enviar_producto(nombre, precio_compra, precio_venta, stock, codigo_barra, id_categoria, id_proveedor)
+            enviar_producto(nombre, precio_compra, precio_venta, stock, nuevo_stock, codigo_barra, id_categoria, id_proveedor)
             messagebox.showinfo("Éxito", "Producto agregado exitosamente")
 
         except Exception as e:
@@ -232,7 +241,8 @@ class GenerarProducto:
             precio_compra_actual = self.tree.item(selected_item)['values'][4]
             precio_venta_actual = self.tree.item(selected_item)['values'][5]
             stock_actual = self.tree.item(selected_item)['values'][6]
-            proveedor_actual = self.tree.item(selected_item)['values'][8]
+            nuevo_stock_actual =self.tree.item(selected_item)['values'][7]
+            proveedor_actual = self.tree.item(selected_item)['values'][9]
 
             # Establecer valores iniciales en los Combobox
             self.combo_categoria.set(categoria_actual)
@@ -251,26 +261,28 @@ class GenerarProducto:
             nueva_categoria = self.combo_categoria.get()
             nuevo_precio_compra = simpledialog.askstring("Modificar producto", "Nuevo precio de compra:", initialvalue=precio_compra_actual)
             nuevo_precio_venta = simpledialog.askstring("Modificar producto", "Nuevo precio de venta:", initialvalue=precio_venta_actual)
-            nuevo_stock = simpledialog.askstring("Modificar producto", "Nuevo stock:", initialvalue=stock_actual)
+            nuevo_stock = simpledialog.askstring("Modificar producto", "Nuevo stock por paquete:", initialvalue=stock_actual)
+            nuevo_stock_nuevo = simpledialog.askstring("Modificar producto", "Nuevo stock actual:", initialvalue=nuevo_stock_actual)
             nuevo_proveedor = self.combo_proveedor.get()
 
             # Verificar que no haya campos vacíos
-            if not nuevo_codigo or not nuevo_nombre or not nueva_categoria or not nuevo_precio_compra or not nuevo_precio_venta or not nuevo_stock or not nuevo_proveedor:
+            if not nuevo_codigo or not nuevo_nombre or not nueva_categoria or not nuevo_precio_compra or not nuevo_precio_venta or not nuevo_stock or not nuevo_stock_actual or not nuevo_proveedor:
                 messagebox.showerror("Error", "Todos los campos son obligatorios")
                 return
 
             # Convertir valores a tipos adecuados
             try:
-                nuevo_precio_compra = float(nuevo_precio_compra)
-                nuevo_precio_venta = float(nuevo_precio_venta)
+                nuevo_precio_compra = int(nuevo_precio_compra)
+                nuevo_precio_venta = int(nuevo_precio_venta)
                 nuevo_stock = int(nuevo_stock)
+                nuevo_stock_actual  = int(nuevo_stock_actual)
             except ValueError:
                 messagebox.showerror("Error", "Precio y stock deben ser números válidos")
                 return
 
             # Actualiza el producto en la base de datos
             try:
-                modificar_producto_db(id_producto, nuevo_codigo, nuevo_nombre, self.categorias_dict[nueva_categoria], nuevo_precio_compra, nuevo_precio_venta, nuevo_stock, self.proveedores_dict[nuevo_proveedor])
+                modificar_producto_db(id_producto, nuevo_codigo, nuevo_nombre, self.categorias_dict[nueva_categoria], nuevo_precio_compra, nuevo_precio_venta, nuevo_stock, nuevo_stock_nuevo, self.proveedores_dict[nuevo_proveedor])
                 messagebox.showinfo("Éxito", "Producto modificado exitosamente")
                 self.cargar_datos()  # Recargar datos para mostrar los cambios
             except Exception as e:

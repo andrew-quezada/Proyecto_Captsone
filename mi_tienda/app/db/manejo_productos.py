@@ -43,7 +43,7 @@ def cargar_categorias():
     return categorias
 
 
-def enviar_producto(nombre, precio_compra, precio_venta, stock, cod_barra, id_categoria, proveedor_id):
+def enviar_producto(nombre, precio_compra, precio_venta, stock, nuevo_stock, cod_barra, id_categoria, proveedor_id):
     conn = create_connection()  # Llama a la función que crea la conexión
     if conn:
         try:
@@ -51,10 +51,10 @@ def enviar_producto(nombre, precio_compra, precio_venta, stock, cod_barra, id_ca
                 # SQL para insertar un nuevo producto
                 print("Intentando insertar producto...")
                 sql = """
-                INSERT INTO productos (nombre, precio_compra, precio_venta, stock, cod_barra, id_categoria, proveedor_id)
+                INSERT INTO productos (nombre, precio_compra, precio_venta, minimo_por_paquete,stock, cod_barra, id_categoria, proveedor_id)
                 VALUES (%s, %s, %s, %s, %s, %s, %s)
                 """
-                cursor.execute(sql, (nombre, precio_compra, precio_venta, stock, cod_barra, id_categoria, proveedor_id))
+                cursor.execute(sql, (nombre, precio_compra, precio_venta, stock, nuevo_stock, cod_barra, id_categoria, proveedor_id))
                 conn.commit()  # Confirmar cambios
                 print("Producto insertado con éxito.")
                 messagebox.showinfo("Éxito", "Producto agregado con éxito.")
@@ -95,6 +95,7 @@ def cargar_productos(tree):
                         categoria.nombre_categoria,
                         productos.precio_compra,
                         productos.precio_venta,
+                        productos.minimo_por_paquete,
                         productos.stock,
                         TO_CHAR(productos.fecha_ingreso, 'DD/MM/YYYY') AS fecha_ingreso,
                         proveedores.empresa
@@ -141,7 +142,7 @@ def eliminar_producto_db(producto_id):
     else:
         messagebox.showerror("Error de conexión", "No se pudo establecer la conexión a la base de datos.")
 
-def modificar_producto_db(id_producto, cod_barra, nombre, id_categoria, precio_compra, precio_venta, stock, proveedor_id):
+def modificar_producto_db(id_producto, cod_barra, nombre, id_categoria, precio_compra, precio_venta, stock, nuevo_stock, proveedor_id):
     conn = create_connection()  # Conexión a la base de datos
     if conn:
         try:
@@ -155,11 +156,12 @@ def modificar_producto_db(id_producto, cod_barra, nombre, id_categoria, precio_c
                     id_categoria = %s, 
                     precio_compra = %s, 
                     precio_venta = %s, 
+                    minimo_por_paquete = %s,
                     stock = %s,
                     proveedor_id = %s
                 WHERE id_producto = %s
                 """
-                cursor.execute(sql, (cod_barra, nombre, id_categoria, precio_compra, precio_venta, stock, proveedor_id, id_producto))
+                cursor.execute(sql, (cod_barra, nombre, id_categoria, precio_compra, precio_venta, stock, nuevo_stock, proveedor_id, id_producto))
                 conn.commit()  # Confirmar cambios
                 affected_rows = cursor.rowcount
                 if affected_rows > 0:
