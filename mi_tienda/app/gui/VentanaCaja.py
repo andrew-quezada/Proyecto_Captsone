@@ -3,13 +3,16 @@ from db.ventana_caja_bd import obtener_producto_por_codigo
 from tkinter import messagebox
 import tkinter as tk
 
+
 class VentanaCaja:
-    def __init__(self, root):
+    def __init__(self, root, nombre_empleado):
         self.root = root
+        self.nombre_empleado = nombre_empleado #obtener nombre empleado de inicio sesion
         self.root.title("Caja de Ventas")
         self.root.state("zoomed")
         self.root.minsize(1000, 400)
-        
+
+        self.total = 0 # Inicializar total en 0
         self.current_row = 0  # Inicializa el contador de filas para el frame_productos
         
 
@@ -31,18 +34,35 @@ class VentanaCaja:
         self.frame_titulo.columnconfigure(0, weight=1)  # Centrar etiquetas en el frame
         self.label_titulo = ttk.Label(self.frame_titulo, text="Venta Caja", font=("Helvetica", 16))
         self.label_titulo.grid(row=0, column=0, sticky="ew", pady=5)
-
-        # Próximamente: nombre del trabajador
-        self.label_usuario = ttk.Label(self.frame_titulo, text="Nombre Usuario", font=("Helvetica", 12))
+        
+        # Mensaje de bienvendia la usuario
+        self.label_usuario = ttk.Label(self.frame_titulo, text=f"Bienvenido: {self.nombre_empleado}", font=("Helvetica", 12))
         self.label_usuario.grid(row=1, column=0, sticky="ew", pady=5)
 
-        # Frame izquierdo inferior: código de barra
-        self.frame_ingreso_producto = ttk.Frame(root, padding=20)
-        self.frame_ingreso_producto.grid(row=1, column=0, sticky="nsew", padx=PADDING_X, pady=PADDING_Y)
-
         # Frame derecho inferior: productos
-        self.frame_productos = ttk.Frame(root, padding=10, borderwidth=2, relief="groove")
-        self.frame_productos.grid(row=1, column=1, sticky="nsew", padx=PADDING_X, pady=PADDING_Y)
+        self.frame_productos = ttk.Frame(root, padding=5, borderwidth=2, relief="groove")
+        self.frame_productos.grid(row=1, column=1, sticky="nsew", padx=5, pady=10)
+
+        self.frame_productos.grid_rowconfigure(0, weight=0)  
+        self.frame_productos.grid_rowconfigure(1, weight=0)
+        self.frame_productos.grid_columnconfigure(0, weight=1)
+        self.frame_productos.grid_columnconfigure(1, weight=0)  
+        self.frame_productos.grid_columnconfigure(2, weight=0)
+        self.frame_productos.grid_columnconfigure(3, weight=0)
+        self.frame_productos.grid_columnconfigure(4, weight=1)
+        self.frame_productos.grid_columnconfigure(5, weight=1)
+
+        # Ajustar el tamaño del Frame
+        self.frame_productos.grid_propagate(False)
+        self.frame_productos.config(width=100)  # Ajusta según tus necesidades
+
+        # Frame inferior (independiente, debajo de frame_productos)
+        self.frame_total = ttk.Frame(root, padding=5, borderwidth=2, relief="ridge")
+        self.frame_total.grid(row=2, column=1, sticky="ew", padx=10, pady=10)  # Posicionado debajo de frame_productos
+
+        # Etiqueta para mostrar el total
+        self.label_total = ttk.Label(self.frame_total, text=f"Total: $0", font=("Helvetica", 14, "bold"))
+        self.label_total.pack(side="right", padx=10)
 
         # Frame izquierdo inferior: código de barra
         self.frame_ingreso_producto = ttk.Frame(root, padding=20)
@@ -112,26 +132,33 @@ class VentanaCaja:
 
             # Insertar en la fila actual
             ttk.Label(self.frame_productos, text=codigo, font=("Helvetica", 12)).grid(
-                row=self.fila_actual_productos, column=0, columnspan=2, pady=10
+                row=self.fila_actual_productos, column=1, columnspan=2, pady=10
             )
             ttk.Label(self.frame_productos, text=nombre, font=("Helvetica", 12)).grid(
-                row=self.fila_actual_productos, column=2,columnspan=3, pady=10
+                row=self.fila_actual_productos, column=3,columnspan=2, pady=10
             )
-            ttk.Label(self.frame_productos, text=f"${precio:.2f}", font=("Helvetica", 12)).grid(
-                row=self.fila_actual_productos + 1, column=0, pady=10
-            )
-            ttk.Label(self.frame_productos, text="x", font=("Helvetica", 12)).grid(
+            ttk.Label(self.frame_productos, text=f"${precio}", font=("Helvetica", 12)).grid(
                 row=self.fila_actual_productos + 1, column=1, pady=10
             )
-            ttk.Label(self.frame_productos, text=cantidad, font=("Helvetica", 12)).grid(
+            ttk.Label(self.frame_productos, text="x", font=("Helvetica", 12)).grid(
                 row=self.fila_actual_productos + 1, column=2, pady=10
             )
-            ttk.Label(self.frame_productos, text=f"${sub_total:.2f}", font=("Helvetica", 12)).grid(
+            ttk.Label(self.frame_productos, text=cantidad, font=("Helvetica", 12)).grid(
                 row=self.fila_actual_productos + 1, column=3, pady=10
             )
+            ttk.Label(self.frame_productos, text=f"${sub_total}", font=("Helvetica", 12)).grid(
+                row=self.fila_actual_productos + 1, column=4, pady=10
+            )
+
+            # Incrementar el total acumulado
+            self.total += sub_total
+
+            # Actualizar la etiqueta del total
+            self.label_total.config(text=f"Total: ${self.total}")
 
             # Incrementar la fila actual para el próximo producto
             self.fila_actual_productos += 2
+
         else:
             messagebox.showerror("Error", "Producto no encontrado.")
 
