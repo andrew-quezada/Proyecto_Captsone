@@ -1,5 +1,7 @@
 from settings import create_connection, close_connection
 from tkinter import messagebox
+import psycopg2
+
 
 def obtener_producto_por_codigo(codigo):
     conn = create_connection()  # Conectar a la base de datos

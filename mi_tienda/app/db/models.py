@@ -33,10 +33,38 @@ def verificar_exitencia(username):
         print(f"Error al consultar la base de datos: {e}")
         return False
     
+def obtener_nombre_empleado(id_usuario):
+    conn = create_connection()
+    if conn is None:
+        return None
+    try:
+        cursor = conn.cursor()
+        query = """
+            SELECT e.nombre
+            FROM empleados e
+            WHERE e.id_usuario = %s
+        """
+        cursor.execute(query, (id_usuario,))
+        empleado = cursor.fetchone()
+        conn.close()
+
+        if empleado:
+            return empleado[0]  # Devuelve el nombre del empleado
+        else:
+            print("Empleado no encontrado.")
+            return None
+    except psycopg2.Error as e:
+        print(f"Error al consultar la base de datos: {e}")
+        return None
+    
+# Variable global para almacenar el id del usuario actual
+usuario_actual = None
+
+# En model.py
 def validacion_usuario(username, password):
     conn = create_connection()
     if conn is None:
-        return None, None
+        return None, None, None
     try:
         cursor = conn.cursor()
         query = """
@@ -49,22 +77,26 @@ def validacion_usuario(username, password):
         cursor.execute(query, (username,))
         user = cursor.fetchone()
         conn.close()
-        
+
         if user:
             user_id, hashed_password, cargo_id = user
-            # Verificar la contraseña ingresada contra el hash almacenado
             if bcrypt.checkpw(password.encode('utf-8'), hashed_password.encode('utf-8')):
-                return user_id, cargo_id  # Devuelve (id_usuario, id_cargo)
+                # Obtener el nombre del empleado
+                nombre_empleado = obtener_nombre_empleado(user_id)
+                if nombre_empleado:
+                    return user_id, cargo_id, nombre_empleado  # Devuelve id_usuario, cargo_id, nombre_empleado
+                else:
+                    return None, None, None
             else:
                 print("Contraseña incorrecta.")
-                return None, None
+                return None, None, None
         else:
             print("Usuario no encontrado.")
-            return None, None
-            
+            return None, None, None
+
     except psycopg2.Error as e:
         print(f"Error al consultar la base de datos: {e}")
-        return None, None
+        return None, None, None
 
 
 
