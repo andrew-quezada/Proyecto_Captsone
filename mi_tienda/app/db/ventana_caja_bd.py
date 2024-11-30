@@ -7,7 +7,7 @@ def obtener_producto_por_codigo(codigo):
         try:
             cursor = conn.cursor()
             # Consulta para obtener el producto por código
-            query = "SELECT cod_barra, nombre ,precio_venta FROM productos WHERE cod_barra = %s"
+            query = "SELECT cod_barra, nombre, precio_venta FROM productos WHERE cod_barra = %s"
             cursor.execute(query, (codigo,))
             producto = cursor.fetchone()
 
@@ -15,7 +15,8 @@ def obtener_producto_por_codigo(codigo):
             conn.close()
 
             if producto:
-                return {'cod_barra': producto[0], 'nombre': producto[1], 'precio_venta': producto[2]}
+                return {'cod_barra': producto[0],'nombre': producto[1],'precio_venta': producto[2]}
+                 
             else:
                 return None
         except Exception as e:
