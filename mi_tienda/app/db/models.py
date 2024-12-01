@@ -33,10 +33,16 @@ def verificar_exitencia(username):
         print(f"Error al consultar la base de datos: {e}")
         return False
     
+# Variable global para almacenar el id del usuario actual
+usuario_actual=None
+    
 def obtener_nombre_empleado(id_usuario):
+    global usuario_actual  # Declarar la variable global
+
     conn = create_connection()
     if conn is None:
         return None
+
     try:
         cursor = conn.cursor()
         query = """
@@ -49,16 +55,19 @@ def obtener_nombre_empleado(id_usuario):
         conn.close()
 
         if empleado:
+            # Asignamos el id_usuario a la variable global usuario_actual
+            usuario_actual = id_usuario
+            print(f"ID del empleado guardado: {usuario_actual}")  # Verificación
             return empleado[0]  # Devuelve el nombre del empleado
         else:
             print("Empleado no encontrado.")
             return None
+
     except psycopg2.Error as e:
         print(f"Error al consultar la base de datos: {e}")
         return None
-    
-# Variable global para almacenar el id del usuario actual
-usuario_actual = None
+
+
 
 # En model.py
 def validacion_usuario(username, password):
