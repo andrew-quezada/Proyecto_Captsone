@@ -6,6 +6,7 @@ import tkinter as tk
 from gui.Ingresar_Stock import IngresarStock
 from gui.menu_solicitudes import MenuSolicitudes
 from gui.menu_nuevos_ingreso import MenuNuevosIngresos
+from gui.Analisis import AnalisisPredictivo
 
 class VentanaGerente:
     def __init__(self, root): 
@@ -69,6 +70,7 @@ class VentanaGerente:
         boton1 = ttk.Button(self.contenedor, text="Gestion\n    de \n Stock", image=icono1, compound="top", style="Custom.TButton", bootstyle=SUCCESS, command=self.open_ingresar_stock_window)
         boton2 = ttk.Button(self.contenedor, text=" Consultas\n         y\nSolicitudes", image=icono2, compound="top", style="Custom.TButton", bootstyle=SUCCESS, command=self.open_menu_solicitudes_peticiones_window)
         boton3 = ttk.Button(self.contenedor, text="Nuevos\ningresos\n", image=icono3, compound="top", style="Custom.TButton", bootstyle=SUCCESS, command=self.open_nuevos_ingresos)
+        boton4 = ttk.Button(self.contenedor, text="analisis\npredictivos\n", image=icono3, compound="top", style="Custom.TButton", bootstyle=SUCCESS, command=self.open_analisis)
 
         # Botón "Cerrar sesión" en un frame aparte
         boton_salida = ttk.Button(self.contenedor_salida, text="Cerrar sesión", image=icono4, compound="left", style="Salida.TButton", bootstyle=SUCCESS)
@@ -77,6 +79,7 @@ class VentanaGerente:
         boton1.grid(row=1, column=0, padx=20, pady=40, ipadx=80, ipady=150)
         boton2.grid(row=1, column=1, padx=20, pady=40, ipadx=80, ipady=150)
         boton3.grid(row=1, column=2, padx=20, pady=40, ipadx=80, ipady=150)
+        boton4.grid(row=1, column=3, padx=20, pady=40, ipadx=80, ipady=150)
 
         # Botón de "Cerrar sesión" en el frame aparte, en la parte inferior
         boton_salida.pack(anchor="e")
@@ -110,6 +113,14 @@ class VentanaGerente:
         self.root.withdraw()  # Oculta la ventana actual (VentanaGerente)
         new_root = ttk.Toplevel(self.root)  # Crea una nueva ventana hija para Ingresar nuevo producto y proveedor
         MenuNuevosIngresos(new_root)
+
+        # Asegúrate de que al cerrar la ventana de Ingresar nuevo producto, regrese a VentanaGerente
+        new_root.protocol("WM_DELETE_WINDOW", lambda: self.on_close_window(new_root))
+
+    def open_analisis(self):
+        self.root.withdraw()  # Oculta la ventana actual (VentanaGerente)
+        new_root = ttk.Toplevel(self.root)  # Crea una nueva ventana hija para Ingresar nuevo producto y proveedor
+        AnalisisPredictivo(new_root)
 
         # Asegúrate de que al cerrar la ventana de Ingresar nuevo producto, regrese a VentanaGerente
         new_root.protocol("WM_DELETE_WINDOW", lambda: self.on_close_window(new_root))
