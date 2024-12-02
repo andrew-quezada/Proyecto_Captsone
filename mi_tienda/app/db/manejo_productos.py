@@ -43,7 +43,7 @@ def cargar_categorias():
     return categorias
 
 
-def enviar_producto(nombre, precio_compra, precio_venta, stock, nuevo_stock, cod_barra, id_categoria, proveedor_id):
+def enviar_producto(nombre, precio_compra, precio_venta, nuevo_stock,stock, cod_barra, id_categoria, proveedor_id):
     conn = create_connection()  # Llama a la función que crea la conexión
     if conn:
         try:
@@ -52,9 +52,9 @@ def enviar_producto(nombre, precio_compra, precio_venta, stock, nuevo_stock, cod
                 print("Intentando insertar producto...")
                 sql = """
                 INSERT INTO productos (nombre, precio_compra, precio_venta, minimo_por_paquete,stock, cod_barra, id_categoria, proveedor_id)
-                VALUES (%s, %s, %s, %s, %s, %s, %s)
+                VALUES (%s, %s, %s, %s, %s, %s, %s,%s)
                 """
-                cursor.execute(sql, (nombre, precio_compra, precio_venta, stock, nuevo_stock, cod_barra, id_categoria, proveedor_id))
+                cursor.execute(sql, (nombre, precio_compra, precio_venta,nuevo_stock,stock, cod_barra, id_categoria, proveedor_id))
                 conn.commit()  # Confirmar cambios
                 print("Producto insertado con éxito.")
                 messagebox.showinfo("Éxito", "Producto agregado con éxito.")
