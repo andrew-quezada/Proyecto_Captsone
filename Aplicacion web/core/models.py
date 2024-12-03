@@ -117,7 +117,6 @@ class Producto(models.Model):
     proveedor_id = models.IntegerField(null=True, blank=True)
     fecha_ingreso = models.DateTimeField(auto_now_add=True)
     stock_minimo = models.IntegerField(default=0, null=True, blank=True)  # Nuevo atributo
-    stock_maximo = models.IntegerField(default=100, null=True, blank=True)  # Nuevo atributo
     nivel_comparativo = models.IntegerField(default=0, null=True, blank=True)  # Nuevo atributo
 
     class Meta:
@@ -178,7 +177,48 @@ class VentaProducto(models.Model):
 
     class Meta:
         db_table = 'ventas_productos'
-        managed = False  # No gestionará migraciones en esta tabla
+        managed = False
+
+
+class Boleta(models.Model):
+    id_boleta = models.AutoField(primary_key=True)  # Clave primaria autoincremental
+    fecha = models.DateTimeField(auto_now_add=True)  # Fecha de la boleta, se llena automáticamente
+    total = models.DecimalField(max_digits=10, decimal_places=2)  # Total de la boleta con 2 decimales
+    id_empleado = models.ForeignKey(
+        'Empleado',  # Asume que tienes un modelo `Empleado`
+        on_delete=models.SET_NULL,  # Si se elimina el empleado, la referencia queda nula
+        null=True,  # Permitir valores nulos
+        db_column='id_empleado'
+    )
+
+    class Meta:
+        db_table = 'boletas'  # Nombre exacto de la tabla en la base de datos
+        managed = False  # Django no gestionará esta tabla
 
     def __str__(self):
-        return f"Producto ID: {self.id_producto.id_producto} - Cantidad Vendida: {self.cantidad_vendida}"
+        return f"Boleta ID: {self.id_boleta} - Fecha: {self.fecha} - Total: {self.total}"
+
+class DetalleBoleta(models.Model):
+    id_detalle_boleta = models.AutoField(primary_key=True)  # Clave primaria autoincremental
+
+    id_boleta = models.ForeignKey(
+        'Boleta',  # Asume que tienes un modelo llamado 'Boleta'
+        on_delete=models.CASCADE,
+        db_column='id_boleta'
+    )
+
+    id_producto = models.ForeignKey(
+        'Producto',  # Asume que tienes un modelo llamado 'Producto'
+        on_delete=models.CASCADE,
+        db_column='id_producto'
+    )
+
+    cantidad = models.IntegerField(default=0)  # Cantidad del producto en la boleta
+    precio_unitario = models.IntegerField(default=0)  # Precio unitario del producto
+
+    class Meta:
+        db_table = 'detalle_boleta'  # Nombre exacto de la tabla en tu base de datos
+        managed = False  # Indica que Django no gestionará esta tabla
+
+    def __str__(self):
+        return f"DetalleBoleta ID: {self.id_detalle_boleta} - Producto ID: {self.id_producto.id_producto} - Cantidad: {self.cantidad}"

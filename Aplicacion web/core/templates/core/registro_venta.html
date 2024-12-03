@@ -3,25 +3,46 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Registro de Ventas</title>
+    <title>Actualizar Stock</title>
     {% load static %}
     <link rel="stylesheet" href="{% static 'core/style.css' %}">
 </head>
 <body>
-    <div class="registro-container">
-        <h1>Registro de Ventas</h1>
-        <form method="POST" action="{% url 'registro_venta' %}">
+    <!-- Botón para volver al menú administrador -->
+    <a href="{% url 'menu_administrador' %}" class="back-button">Volver al Menú Administrador</a>
+    <br>
+    <br>
+    <div class="gestion-venta-container">
+        <h1>Actualizar Stock</h1>
+        <p>Modifica el stock de un producto. Regularizará el stock actual y reflejará los cambios tanto para ti como para el empleado.</p>
+        <form method="POST">
             {% csrf_token %}
-            <label for="producto">Producto:</label>
-            <select id="producto" name="producto">
+            
+            <label for="id_producto">Producto:</label>
+            <select name="id_producto" id="id_producto" required>
+                <option value="" disabled selected>Seleccione un producto</option>
                 {% for producto in productos %}
-                <option value="{{ producto.id_producto }}">{{ producto.nombre }}</option>
+                <option value="{{ producto.id_producto }}">{{ producto.nombre }} (Stock: {{ producto.stock }})</option>
                 {% endfor %}
             </select>
-            <label for="cantidad">Cantidad Vendida:</label>
-            <input type="number" id="cantidad" name="cantidad" min="1" required>
-            <button type="submit">Registrar Venta</button>
+
+            <label for="cantidad">Cantidad:</label>
+            <input type="number" name="cantidad" id="cantidad" min="1" required>
+
+            <label for="fecha_boleta">Fecha de Modificación:</label>
+            <input type="date" name="fecha_boleta" id="fecha_boleta" required>
+
+            <button type="submit">Actualizar Stock</button>
         </form>
+
+        <!-- Mensajes de éxito o error -->
+        {% if messages %}
+        <div class="messages">
+            {% for message in messages %}
+            <p class="{{ message.tags }}">{{ message }}</p>
+            {% endfor %}
+        </div>
+        {% endif %}
     </div>
 </body>
 </html>

@@ -13,6 +13,9 @@ urlpatterns = [
     path('gestion_stock/', views.gestion_stock, name='gestion_stock'),
     path('prediccion_demanda/', views.prediccion_demanda, name='prediccion_demanda'),
     path('editar_producto/<int:producto_id>/', views.editar_producto_stock, name='editar_producto'),
-    path('eliminar_producto/<int:producto_id>/', views.eliminar_producto_stock, name='eliminar_producto_stock'),
-    path('registro_venta/',views.registro_venta, name='registro_venta')
+    path('eliminar_producto/<int:producto_id>/', views.eliminar_producto, name='eliminar_producto'),
+    path('registro_venta/',views.registro_venta, name='registro_venta'),
+    path('listar_proveedores/', views.listar_proveedores, name='listar_proveedores'),
+    path('editar_proveedor/<int:proveedor_id>/', views.editar_proveedor, name='editar_proveedor')
+
 ]

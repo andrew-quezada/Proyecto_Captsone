@@ -1,36 +1,20 @@
 <!-- templates/core/editar_producto.html -->
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Editar Producto</title>
     {% load static %}
     <link rel="stylesheet" href="{% static 'core/style.css' %}">
 </head>
 <body>
-    <h1>Editar {{ producto.nombre }}</h1>
+    <h1>Editar Producto: {{ producto.nombre }}</h1>
     <form method="POST">
         {% csrf_token %}
-        {{ form.as_p }}  <!-- Muestra el formulario -->
-        <button type="submit">Guardar Cambios</button>
-        <a href="{% url 'gestion_stock' %}">Cancelar</a>
-    </form><!DOCTYPE html>
-    <html lang="es">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Editar Producto</title>
-        {% load static %}
-        <link rel="stylesheet" href="{% static 'core/style.css' %}">
-    </head>
-    <body>
-        <h1>Editar Producto: {{ producto.nombre }}</h1>
-        <form method="POST">
-            {% csrf_token %}
-            <label>Nombre</label>
-            <input type="text" name="nombre" value="{{ producto.nombre }}">
-            
+        
+        <label for="nombre">Nombre</label>
+        <input type="text" id="nombre" name="nombre" value="{{ producto.nombre }}" required>            
             <label>Precio Compra</label>
             <input type="number" name="precio_compra" value="{{ producto.precio_compra }}">
             
@@ -38,7 +22,7 @@
             <input type="number" name="precio_venta" value="{{ producto.precio_venta }}">
             
             <label>Stock</label>
-            <input type="number" name="stock" value="{{ producto.stock }}">
+            <input type="number" name="stock" value="{{ producto.stock }}" readonly>
             
             <button type="submit">Guardar Cambios</button>
         </form>

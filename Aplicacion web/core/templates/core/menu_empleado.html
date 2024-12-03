@@ -14,63 +14,66 @@
 <body>
 
   <!-- Header -->
-  <header>
-    <div class="menu" onclick="openMenu()">&#9776;</div>
-    <div class="titulo">TEXTO DE EMPRESA</div>
-    <div class="usuario">
-      <div class="division">
-        <span class="presentacion">Bienvenido</span>
-        <span class="nombres">Usuario</span>
+  <header class="header">
+    <div class="menu-icon toggle-menu" onclick="openMenu()" role="button" aria-label="Abrir menú">&#9776;</div>
+    <div class="titulo-empresa">TEXTO DE EMPRESA</div>
+    <div class="usuario-info">
+      <div class="usuario-texto">
+        <span class="usuario-bienvenida">Bienvenido</span>
+        <span class="usuario-nombre">Usuario</span>
       </div>
     </div>
   </header>  
 
   <!-- Menú lateral -->
-  <div id="sideMenu" class="side-menu">
+  <nav id="sideMenu" class="menu-empleado side-menu" role="navigation" aria-label="Menú lateral">
     <!-- Botón para cerrar el menú lateral -->
-    <a href="javascript:void(0)" class="close-btn" onclick="closeMenu()">&times;</a>
+    <a href="javascript:void(0)" class="close-btn" onclick="closeMenu()" aria-label="Cerrar menú">&times;</a>
     
     <!-- Opciones del menú lateral -->
     <ul>
       <li><a href="{% url 'stock_tienda' %}">Stock Tienda</a></li>
       <li><a href="{% url 'productos_solicitados' %}">Stock solicitado</a></li>
-      <li><a href="{% url 'inicio' %}">Cerrar sesión <span>&#8634;</span></a></li>
+      <li><a href="{% url 'listar_proveedores' %}">Listar Proveedores</a></li>
+      <li><a href="{% url 'inicio' %}">Cerrar sesión <span class="logout-icon">&#8634;</span></a></li>
     </ul>
-  </div>
+  </nav>
 
   <!-- Contenido principal -->
   <main class="contenedor">
 
     <!-- Sección de principales ventas -->
-    <section class="ventas">
-      <h3>Principales ventas</h3>
-      <!-- Producto más vendido -->
-      <div class="producto">
-        <span class="producto-nombre">Producto más vendido:</span>
-        <span class="producto-detalle">Fecha ingreso: {{ producto_mas_vendido.fecha_ingreso }}</span>
-        <span class="producto-cantidad">Stock: {{ producto_mas_vendido.stock }}</span>
-        <span class="producto-codigo">ID: {{ producto_mas_vendido.id_producto }}</span>
-      </div>
-      <!-- Producto menos vendido -->
-      <div class="producto">
-        <span class="producto-nombre">Producto menos vendido:</span>
-        <span class="producto-detalle">Fecha ingreso: {{ producto_menos_vendido.fecha_ingreso }}</span>
-        <span class="producto-cantidad">Stock: {{ producto_menos_vendido.stock }}</span>
-        <span class="producto-codigo">ID: {{ producto_menos_vendido.id_producto }}</span>
+    <section class="ventas cuadro-seccion">
+      <h3 class="seccion-titulo">Principales ventas</h3>
+      <div class="ventas-container">
+        <!-- Producto más vendido -->
+        <div class="producto-detalle destacado">
+          <span class="producto-titulo">Producto más vendido:</span>
+          <span class="producto-fecha">Fecha ingreso: {{ producto_mas_vendido.fecha_ingreso|date:"d/m/Y" }}</span>
+          <span class="producto-stock">Stock: {{ producto_mas_vendido.stock }}</span>
+          <span class="producto-id">ID: {{ producto_mas_vendido.id_producto }}</span>
+        </div>
+        <!-- Producto menos vendido -->
+        <div class="producto-detalle">
+          <span class="producto-titulo">Producto menos vendido:</span>
+          <span class="producto-fecha">Fecha ingreso: {{ producto_menos_vendido.fecha_ingreso|date:"d/m/Y" }}</span>
+          <span class="producto-stock">Stock: {{ producto_menos_vendido.stock }}</span>
+          <span class="producto-id">ID: {{ producto_menos_vendido.id_producto }}</span>
+        </div>
       </div>
     </section>
 
     <!-- Sección de mensajes -->
-    <section class="mensajes">
-      <h3>Mensajes</h3>
+    <section class="mensajes cuadro-seccion">
+      <h3 class="seccion-titulo">Mensajes</h3>
       
       {% for mensaje in mensajes %}
-      <article class="mensaje">
-        <p class="fecha">Fecha: {{ mensaje.fecha }}</p>
-        <p>{{ mensaje.mensaje }}</p>
+      <article class="mensaje-item">
+        <p class="mensaje-fecha">Fecha: {{ mensaje.fecha|date:"d/m/Y" }}</p>
+        <p class="mensaje-texto">{{ mensaje.mensaje }}</p>
       </article>
       {% empty %}
-      <p>No hay mensajes disponibles.</p>
+      <p class="mensaje-vacio">No hay mensajes disponibles.</p>
       {% endfor %}
     </section>
 
@@ -83,12 +86,12 @@
   <script>
     // Función para abrir el menú lateral
     function openMenu() {
-      document.getElementById("sideMenu").style.width = "250px";
+      document.getElementById("sideMenu").classList.add("show");
     }
 
     // Función para cerrar el menú lateral
     function closeMenu() {
-      document.getElementById("sideMenu").style.width = "0";
+      document.getElementById("sideMenu").classList.remove("show");
     }
   </script>
 

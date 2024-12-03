@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editar Proveedor</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'core/style.css' %}">
+</head>
+<body>
+    <h1>Editar Proveedor</h1>
+
+    <!-- Contenedor de formulario -->
+    <div class="form-container">
+        <form method="POST">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit">Guardar Cambios</button>
+        </form>
+    </div>
+
+    <!-- Botón de cancelar -->
+    <div class="cancel-container">
+        <a href="{% url 'listar_proveedores' %}">Cancelar</a>
+    </div>
+</body>
+</html>

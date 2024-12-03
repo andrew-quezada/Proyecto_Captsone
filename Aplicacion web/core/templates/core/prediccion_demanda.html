@@ -6,109 +6,192 @@
     <title>Predicción de Demanda - Administrador</title>
     {% load static %}
     <link rel="stylesheet" href="{% static 'core/style.css' %}">
+    <style>
+        /* === Estilos para Predicción de Demanda === */
+
+        /* Estilos generales */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 0;
+        }
+
+        h1, h2 {
+            text-align: center;
+            color: #2c3e50;
+        }
+
+        /* Barra lateral */
+        .sidebar {
+            background-color: #333;
+            padding: 15px;
+        }
+
+        .back-button {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+            padding: 10px 15px;
+            background-color: #007bff;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+            display: inline-block;
+        }
+
+        .back-button:hover {
+            background-color: #0056b3;
+        }
+
+        /* Contenedor principal */
+        .content {
+            margin: 20px auto;
+            max-width: 1200px;
+            padding: 20px;
+            background-color: #ffffff;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
+
+        /* Formulario */
+        .product-selection-form {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .product-selection-form label {
+            font-size: 1rem;
+            color: #333;
+        }
+
+        .product-selection-form select,
+        .product-selection-form button {
+            padding: 10px;
+            font-size: 1rem;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            outline: none;
+        }
+
+        .product-selection-form button {
+            background-color: #28a745;
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .product-selection-form button:hover {
+            background-color: #218838;
+        }
+
+        /* Tabla */
+        .prediction-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        .prediction-table th, .prediction-table td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: center;
+        }
+
+        .prediction-table th {
+            background-color: #007bff;
+            color: white;
+        }
+
+        .no-data-message {
+            text-align: center;
+            font-weight: bold;
+            color: red;
+        }
+
+        /* Gráfico */
+        .demand-chart-container img {
+            display: block;
+            margin: 0 auto;
+            max-width: 100%;
+            height: auto;
+            border-radius: 5px;
+        }
+
+        /* Adaptabilidad */
+        @media (max-width: 768px) {
+            .content {
+                padding: 10px;
+            }
+
+            .product-selection-form {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .product-selection-form label {
+                text-align: center;
+            }
+        }
+    </style>
 </head>
 <body>
     <!-- Barra lateral -->
     <div class="sidebar">
         <a href="{% url 'menu_administrador' %}" class="back-button">Volver al Menú Administrador</a>
     </div>
+
     <!-- Contenido principal -->
     <div class="content">
         <div class="demand-container">
-            <h1>Predicción de Demanda - Administrador</h1>
+            <h1>Predicción de Demanda</h1>
+
+            <!-- Formulario para seleccionar producto -->
+            <form method="get" class="product-selection-form">
+                <label for="producto_id">Seleccione un producto:</label>
+                <select name="producto_id" id="producto_id">
+                    <option value="" {% if not request.GET.producto_id %}selected{% endif %}>Todos los Productos</option>
+                    {% for producto in productos %}
+                        <option value="{{ producto.id }}" {% if producto.id|stringformat:"d" == request.GET.producto_id %}selected{% endif %}>
+                            {{ producto.nombre }}
+                        </option>
+                    {% endfor %}
+                </select>
+                <button type="submit">Filtrar</button>
+            </form>
+
             <div class="demand-chart-container">
-                <!-- Gráfico de productos más vendidos -->
-                <div class="demand-chart">
-                    <h2>Productos Más Vendidos</h2>
-                    <ul>
-                        {% for producto in productos_mas_vendidos %}
-                        <li>
-                            {{ producto.nombre }} (ID: {{ producto.id_producto }}) - Vendidos: {{ producto.cantidad_vendida }}
-                        </li>
-                        {% empty %}
-                        <p>No hay productos más vendidos registrados.</p>
-                        {% endfor %}
-                    </ul>
-                    <canvas id="productosMasVendidos"></canvas>
-                </div>
-                <!-- Gráfico de productos menos vendidos -->
-                <div class="demand-chart">
-                    <h2>Productos Menos Vendidos</h2>
-                    <ul>
-                        {% for producto in productos_menos_vendidos %}
-                        <li>
-                            {{ producto.nombre }} (ID: {{ producto.id_producto }}) - Vendidos: {{ producto.cantidad_vendida }}
-                        </li>
-                        {% empty %}
-                        <p>No hay productos menos vendidos registrados.</p>
-                        {% endfor %}
-                    </ul>
-                    <canvas id="productosMenosVendidos"></canvas>
-                </div>
+                <h2>Predicción para los Próximos 30 Días</h2>
+                {% if grafico %}
+                    <!-- Mostrar gráfico -->
+                    <img src="data:image/png;base64,{{ grafico }}" alt="Gráfico de Predicción">
+                {% elif prediccion_futura %}
+                    <!-- Tabla si no hay gráfico -->
+                    <table class="prediction-table">
+                        <thead>
+                            <tr>
+                                <th>Fecha</th>
+                                <th>Demanda Predicha</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for prediccion in prediccion_futura %}
+                                <tr>
+                                    <td>{{ prediccion.ds|date:"d/m/Y" }}</td>
+                                    <td>{{ prediccion.yhat|floatformat:2 }}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                {% else %}
+                    <!-- Mensaje de error -->
+                    <p class="no-data-message">No hay datos suficientes para realizar una predicción.</p>
+                {% endif %}
             </div>
         </div>
     </div>
-
-    <!-- Librería Chart.js -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script>
-        // Datos para el gráfico de productos más vendidos
-        const productosMasVendidos = {{ productos_mas_vendidos|safe }};
-        const nombresMasVendidos = productosMasVendidos.map(producto => producto.nombre);
-        const cantidadesMasVendidos = productosMasVendidos.map(producto => producto.cantidad_vendida);
-
-        // Datos para el gráfico de productos menos vendidos
-        const productosMenosVendidos = {{ productos_menos_vendidos|safe }};
-        const nombresMenosVendidos = productosMenosVendidos.map(producto => producto.nombre);
-        const cantidadesMenosVendidos = productosMenosVendidos.map(producto => producto.cantidad_vendida);
-
-        // Gráfico de productos más vendidos
-        const productosMasVendidosCtx = document.getElementById('productosMasVendidos').getContext('2d');
-        new Chart(productosMasVendidosCtx, {
-            type: 'bar',
-            data: {
-                labels: nombresMasVendidos,
-                datasets: [{
-                    label: 'Cantidad Vendida',
-                    data: cantidadesMasVendidos,
-                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
-                    borderColor: 'rgba(75, 192, 192, 1)',
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                scales: {
-                    y: {
-                        beginAtZero: true
-                    }
-                }
-            }
-        });
-
-        // Gráfico de productos menos vendidos
-        const productosMenosVendidosCtx = document.getElementById('productosMenosVendidos').getContext('2d');
-        new Chart(productosMenosVendidosCtx, {
-            type: 'bar',
-            data: {
-                labels: nombresMenosVendidos,
-                datasets: [{
-                    label: 'Cantidad Vendida',
-                    data: cantidadesMenosVendidos,
-                    backgroundColor: nombresMenosVendidos.map((nombre, index) =>
-                        index === 0 ? 'rgba(255, 0, 0, 0.6)' : 'rgba(255, 99, 132, 0.2)'
-                    ),
-                    borderColor: 'rgba(255, 99, 132, 1)',
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                scales: {
-                    y: {
-                        beginAtZero: true
-                    }
-                }
-            }
-        });
-    </script>
 </body>
 </html>

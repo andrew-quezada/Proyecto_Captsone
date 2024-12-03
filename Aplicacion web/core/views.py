@@ -2,9 +2,21 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.contrib.auth.hashers import check_password
-from .models import Usuario, Empleado, ProductoInventario, Producto, Proveedor, SolicitudProducto, EstadoSolicitud, Cargo, VentaProducto
-from .forms import EditarProductoForm
+from .models import Usuario, Empleado, ProductoInventario, Producto, Proveedor, SolicitudProducto, EstadoSolicitud, Cargo, VentaProducto, Boleta, DetalleBoleta
+from .forms import EditarProductoForm, ProveedorForm
 from django.contrib.auth import authenticate, login
+from django.utils import timezone
+from django.db.models import Sum, F
+from prophet import Prophet
+from django.utils.timezone import now
+from decimal import Decimal  # Agregado
+from django.db import transaction  # Para transacciones seguras
+from datetime import datetime  # Asegúrate de incluir esta línea
+import pandas as pd
+import matplotlib.pyplot as plt
+import io
+import urllib, base64
+
 
 # Vista para mostrar la página de inicio
 def inicio(request):
@@ -61,21 +73,52 @@ def menu_empleado(request):
     producto_mas_vendido = Producto.objects.order_by('-stock').first()
     producto_menos_vendido = Producto.objects.order_by('stock').first()
 
+    # Calcular las ventas del día actual
+    ventas_dia = DetalleBoleta.objects.filter(id_boleta__fecha__date=timezone.now().date()) \
+        .values('id_producto') \
+        .annotate(total_vendido=Sum('cantidad')) \
+        .order_by('-total_vendido')
+    producto_mas_vendido_hoy = Producto.objects.get(id_producto=ventas_dia[0]['id_producto']) if ventas_dia else None
+
+    # Productos con bajo stock
+    productos_bajo_stock = Producto.objects.filter(stock__lte=F('stock_minimo'))
+
+    # Productos vendidos con stock insuficiente
+    ventas_stock_insuficiente = DetalleBoleta.objects.filter(
+        id_producto__stock__lt=F('cantidad')
+    ).values('id_producto').annotate(total_vendido=Sum('cantidad'))
+
+    # Total de ventas del empleado (si aplica autenticación)
+    empleado = request.user  # Suponiendo que el empleado está autenticado
+    total_ventas_empleado = Boleta.objects.filter(
+        id_empleado=empleado.id,
+        fecha__date=timezone.now().date()
+    ).aggregate(total=Sum('total'))['total'] or 0
+
     # Mensajes relacionados con los productos
     mensajes = []
-    if producto_mas_vendido:
-        mensajes.append({
-            'tipo': 'pedido',
-            'fecha': producto_mas_vendido.fecha_ingreso,
-            'mensaje': f"ID del producto: {producto_mas_vendido.id_producto}"
-        })
+    # Mensaje del producto menos vendido con stock crítico
     if producto_menos_vendido and producto_menos_vendido.stock <= producto_menos_vendido.stock_minimo:
         mensajes.append({
             'tipo': 'stock_critico',
             'fecha': producto_menos_vendido.fecha_ingreso,
-            'mensaje': f"ID del producto: {producto_menos_vendido.id_producto}"
+            'mensaje': f"Producto con stock crítico: ID {producto_menos_vendido.id_producto}."
         })
+    # Mensajes de productos con bajo stock
+    for producto in productos_bajo_stock:
+        mensajes.append({
+            'tipo': 'stock_bajo',
+            'fecha': producto.fecha_ingreso,
+            'mensaje': f"El producto {producto.nombre} tiene un stock crítico ({producto.stock} unidades)."
+        })
+    # Resumen de ventas del empleado
+    mensajes.append({
+        'tipo': 'resumen',
+        'fecha': timezone.now().date(),
+        'mensaje': f"Hoy has generado un total de ventas por ${total_ventas_empleado}."
+    })
 
+    # Renderizar la vista con el contexto
     return render(request, 'core/menu_empleado.html', {
         'producto_mas_vendido': producto_mas_vendido,
         'producto_menos_vendido': producto_menos_vendido,
@@ -98,35 +141,66 @@ def productos_solicitados(request):
 
 # Vista para mostrar la predicción de demanda de productos más y menos vendidos
 def prediccion_demanda(request):
-    productos = Producto.objects.all()  # Obtiene todos los productos
-    # Ordena los productos según la cantidad vendida (nivel_comparativo) para encontrar los más y menos vendidos
-    productos_mas_vendidos = productos.order_by('-nivel_comparativo')[:5]
-    productos_menos_vendidos = productos.order_by('nivel_comparativo')[:5]
+    # Obtener el producto seleccionado
+    producto_id = request.GET.get('producto_id')
+    productos = Producto.objects.all()  # Lista de productos para el formulario
 
-    # Serializa los datos para pasarlos al template
-    productos_data_mas_vendidos = [
-        {
-            'id_producto': producto.id_producto,
-            'nombre': producto.nombre,
-            'cantidad_vendida': producto.nivel_comparativo,
-            'fecha_ingreso': producto.fecha_ingreso
-        }
-        for producto in productos_mas_vendidos
-    ]
+    # Filtrar datos dependiendo del producto seleccionado
+    if producto_id:
+        ventas = (
+            DetalleBoleta.objects.filter(id_producto=producto_id)
+            .values('id_boleta__fecha')  # Obtener la fecha desde la tabla boletas
+            .annotate(total_vendida=Sum('cantidad'))  # Sumar las cantidades vendidas
+            .order_by('id_boleta__fecha')
+        )
+    else:
+        ventas = (
+            DetalleBoleta.objects.values('id_boleta__fecha')  # Todas las boletas
+            .annotate(total_vendida=Sum('cantidad'))
+            .order_by('id_boleta__fecha')
+        )
 
-    productos_data_menos_vendidos = [
-        {
-            'id_producto': producto.id_producto,
-            'nombre': producto.nombre,
-            'cantidad_vendida': producto.nivel_comparativo,
-            'fecha_ingreso': producto.fecha_ingreso
-        }
-        for producto in productos_menos_vendidos
-    ]
+    # Convertir los datos a DataFrame para trabajar con Prophet
+    df = pd.DataFrame(list(ventas))
+    if df.empty or len(df) < 2:
+        return render(request, 'core/prediccion_demanda.html', {
+            'prediccion_futura': None,
+            'error': 'No hay datos suficientes para realizar la predicción.',
+            'productos': productos,
+        })
+
+    # Renombrar columnas para Prophet
+    df.rename(columns={'id_boleta__fecha': 'ds', 'total_vendida': 'y'}, inplace=True)
+
+    # Crear y ajustar el modelo Prophet
+    model = Prophet()
+    model.fit(df)
+
+    # Generar predicción
+    future = model.make_future_dataframe(periods=30)
+    forecast = model.predict(future)
+
+    # Generar gráfico
+    plt.figure(figsize=(10, 6))
+    plt.plot(df['ds'], df['y'], label='Datos históricos')
+    plt.plot(forecast['ds'], forecast['yhat'], label='Predicción', color='orange')
+    plt.fill_between(forecast['ds'], forecast['yhat_lower'], forecast['yhat_upper'], color='gray', alpha=0.2)
+    plt.title('Predicción de Demanda')
+    plt.xlabel('Fecha')
+    plt.ylabel('Demanda')
+    plt.legend()
+
+    # Convertir gráfico a base64
+    buf = io.BytesIO()
+    plt.savefig(buf, format='png')
+    buf.seek(0)
+    image_base64 = base64.b64encode(buf.read()).decode('utf-8')
+    buf.close()
 
     return render(request, 'core/prediccion_demanda.html', {
-        'productos_mas_vendidos': productos_data_mas_vendidos,
-        'productos_menos_vendidos': productos_data_menos_vendidos,
+        'prediccion_futura': forecast[['ds', 'yhat', 'yhat_lower', 'yhat_upper']].to_dict(orient='records'),
+        'grafico': image_base64,
+        'productos': productos,
     })
 
 # Vista para gestionar el stock de los productos
@@ -155,14 +229,14 @@ def editar_producto_stock(request, producto_id):
     return render(request, 'core/editar_producto.html', {'producto': producto})  # Muestra el formulario para editar el producto
 
 # Vista para eliminar un producto del stock
-def eliminar_producto_stock(request, producto_id):
-    producto = get_object_or_404(Producto, id_producto=producto_id)  # Obtiene el producto o retorna un error 404
-    if request.method == 'POST':
-        producto.delete()  # Elimina el producto
-        messages.success(request, 'Producto eliminado correctamente.')  # Mensaje de éxito
-        return redirect('gestion_stock')  # Redirige a la página de gestión de stock
-    return render(request, 'core/eliminar_producto.html', {'producto': producto})  # Muestra el formulario de confirmación
-
+def eliminar_producto(request, producto_id):
+    producto = get_object_or_404(Producto, id_producto=producto_id)
+    if request.method == 'POST':  # Asegúrate de que la eliminación se haga con una solicitud POST
+        producto.delete()
+        messages.success(request, 'Producto eliminado correctamente.')
+        return redirect('gestion_stock')
+    return render(request, 'core/eliminar_producto.html', {'producto': producto})
+    
 # Vista para mostrar el formulario de login
 def login_view(request):
     return render(request, 'core/login.html')
@@ -170,24 +244,87 @@ def login_view(request):
 # Vista para registrar una venta
 def registro_venta(request):
     if request.method == 'POST':
-        producto_id = request.POST.get('producto')  # Obtiene el producto seleccionado
-        cantidad_vendida = int(request.POST.get('cantidad'))  # Obtiene la cantidad vendida
-        
+        producto_id = request.POST.get('id_producto')
+        cantidad_vendida = request.POST.get('cantidad')
+        fecha_boleta = request.POST.get('fecha_boleta')  # Recibir fecha desde el formulario
+
+        # Validar entrada
+        if not producto_id or not cantidad_vendida.isdigit() or not fecha_boleta:
+            messages.error(request, "Datos inválidos. Verifique el formulario.")
+            return redirect('registro_venta')
+
         try:
-            # Verifica si el producto existe
-            producto = Producto.objects.get(id_producto=producto_id)
-            
-            # Crea un registro en la tabla VentasProductos
-            venta = VentasProductos.objects.create(
-                producto=producto,
-                cantidad_vendida=cantidad_vendida
+            # Intentar convertir la fecha_boleta a un objeto datetime
+            fecha_boleta = datetime.strptime(fecha_boleta, '%Y-%m-%d')
+        except ValueError:
+            messages.error(request, "La fecha ingresada no es válida. Use el formato YYYY-MM-DD.")
+            return redirect('registro_venta')
+
+        cantidad_vendida = int(cantidad_vendida)
+
+        # Obtener producto o error 404
+        producto = get_object_or_404(Producto, id_producto=producto_id)
+
+        # Verificar stock
+        if producto.stock < cantidad_vendida:
+            messages.error(
+                request,
+                f"Stock insuficiente: {producto.stock} unidades disponibles."
             )
-            
-            messages.success(request, f"Venta registrada: {cantidad_vendida} unidades de {producto.nombre}.")  # Mensaje de éxito
-        except Producto.DoesNotExist:
-            messages.error(request, "El producto no existe.")  # Mensaje de error si el producto no se encuentra
-        
-        return redirect('registro_venta')  # Redirige a la página de registro de ventas
+            return redirect('registro_venta')
+
+        try:
+            # Realizar todo en una transacción para consistencia
+            with transaction.atomic():
+                # Actualizar stock
+                producto.stock -= cantidad_vendida
+                producto.save()
+
+                # Crear boleta usando la fecha proporcionada
+                boleta = Boleta.objects.create(
+                    fecha=fecha_boleta,  # Se asigna la fecha recibida desde el formulario
+                    total=Decimal(0),  # Inicialmente en 0, se calculará
+                    id_empleado=request.user.id  # Asumiendo autenticación
+                )
+
+                # Registrar detalle de boleta
+                DetalleBoleta.objects.create(
+                    id_boleta=boleta,
+                    id_producto=producto,
+                    cantidad=cantidad_vendida,
+                    precio_unitario=producto.precio_venta
+                )
+
+                # Calcular y actualizar total de la boleta
+                boleta.total += Decimal(cantidad_vendida) * producto.precio_venta
+                boleta.save()
+
+            messages.success(
+                request,
+                f"Venta registrada: {cantidad_vendida} unidades de {producto.nombre}."
+            )
+        except Exception as e:
+            messages.error(request, f"Error al registrar la venta: {e}")
+
+        return redirect('registro_venta')
+
+    # Renderizar formulario
+    productos = Producto.objects.all()
+    return render(request, 'core/registro_venta.html', {'productos': productos})
+
+def listar_proveedores(request):
+    proveedores = Proveedor.objects.all()
+    return render(request, 'core/listar_proveedores.html', {'proveedores': proveedores})
+
+def editar_proveedor(request, proveedor_id):
+    proveedor = get_object_or_404(Proveedor, id=proveedor_id)
+    
+    if request.method == 'POST':
+        form = ProveedorForm(request.POST, instance=proveedor)
+        if form.is_valid():
+            form.save()
+            return redirect('listar_proveedores')  # Redirige a la lista de proveedores
     else:
-        productos = Producto.objects.all()  # Obtiene todos los productos
-        return render(request, 'core/registro_venta.html', {'productos': productos})  # Muestra el formulario de registro de ventas
+        form = ProveedorForm(instance=proveedor)
+    
+    return render(request, 'core/editar_proveedor.html', {'form': form, 'proveedor': proveedor})

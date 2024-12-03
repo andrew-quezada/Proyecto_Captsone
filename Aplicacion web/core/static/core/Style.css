@@ -1,243 +1,4 @@
-/* Estilo para el contenedor del header */
-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 10px 20px;
-  background-color: #333;
-  color: #fff;
-  font-family: Arial, sans-serif;
-}
-
-/* Botón del menú */
-.menu {
-  cursor: pointer;
-  font-size: 24px;
-  color: #fff;
-}
-
-/* Título de la empresa */
-.titulo {
-  font-size: 1.5em;
-  font-weight: bold;
-  text-align: center;
-  flex: 1;
-  color: #f1f1f1;
-}
-
-/* Información del usuario */
-.usuario {
-  display: flex;
-  align-items: center;
-}
-
-.usuario .division {
-  margin-right: 10px;
-  text-align: right;
-}
-
-.usuario .presentacion {
-  display: block;
-  font-size: 0.8em;
-}
-
-.usuario .nombres {
-  font-size: 1em;
-  font-weight: bold;
-}
-
-/* Imagen de perfil */
-.usuario img {
-  border-radius: 50%;
-  width: 50px;
-  height: 50px;
-}
-
-/* Estilo para el menú lateral */
-.side-menu {
-  position: fixed;
-  top: 0;
-  left: 0;
-  height: 100%;
-  width: 0;
-  overflow-x: hidden;
-  background-color: #111;
-  color: white;
-  transition: width 0.3s ease;
-  padding-top: 60px;
-  z-index: 1000;
-}
-
-.side-menu ul {
-  list-style-type: none;
-  padding: 0;
-}
-
-.side-menu ul li {
-  padding: 8px 16px;
-}
-
-.side-menu ul li a {
-  color: #fff;
-  text-decoration: none;
-  font-size: 1.2em;
-  display: block;
-  transition: background 0.3s ease;
-}
-
-.side-menu ul li a:hover {
-  background-color: #575757;
-}
-
-.close-btn {
-  position: absolute;
-  top: 10px;
-  right: 25px;
-  font-size: 36px;
-  color: white;
-  text-decoration: none;
-  cursor: pointer;
-}
-
-/* Contenedor principal */
-.contenedor {
-  display: flex;
-  justify-content: space-around;
-  margin: 20px;
-  gap: 20px;
-  flex-wrap: wrap;
-}
-
-/* Estilo para la sección de ventas */
-.ventas, .mensajes {
-  background-color: #f9f9f9;
-  padding: 15px;
-  border-radius: 8px;
-  width: 45%;
-}
-
-.ventas h3, .mensajes h3 {
-  margin-bottom: 15px;
-  color: #333;
-}
-
-/* Estilo para productos */
-.producto {
-  display: flex;
-  justify-content: space-between;
-  padding: 10px;
-  border-bottom: 1px solid #ddd;
-}
-
-.producto-nombre {
-  font-weight: bold;
-}
-
-.producto-detalle, .producto-cantidad, .producto-codigo {
-  font-size: 0.9em;
-  color: #666;
-}
-
-/* Sección de mensajes con colores tipo semáforo */
-
-/* Mensaje de pedido realizado - Verde */
-.mensaje.pedido {
-  border-left: 8px solid #4CAF50;  /* Verde */
-  background-color: #e8f5e9;  /* Verde claro */
-  padding: 10px;
-  margin-bottom: 10px;
-  border-radius: 5px;
-}
-
-/* Mensaje de stock crítico - Amarillo */
-.mensaje.stock-critico {
-  border-left: 8px solid #FFEB3B;  /* Amarillo */
-  background-color: #fffde7;  /* Amarillo claro */
-  padding: 10px;
-  margin-bottom: 10px;
-  border-radius: 5px;
-}
-
-/* Mensaje de producto próximo a vencer - Rojo */
-.mensaje.vencer {
-  border-left: 8px solid #F44336;  /* Rojo */
-  background-color: #ffebee;  /* Rojo claro */
-  padding: 10px;
-  margin-bottom: 10px;
-  border-radius: 5px;
-}
-
-/* Fecha en los mensajes */
-.mensaje .fecha {
-  font-weight: bold;
-  font-size: 0.9em;
-  color: #555;
-  margin-bottom: 5px;
-}
-
-/* Estilo general para la página de empleado */
-.page-employee {
-  font-family: Arial, sans-serif;
-  background-color: #f7f7f7;
-  color: #333;
-  text-align: center;
-}
-
-/* Contenedor principal para la página de empleado */
-.employee-container {
-  width: 80%;
-  margin: auto;
-  padding: 20px;
-  background-color: #fff;
-  border-radius: 8px;
-  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-}
-
-/* Título de la página de empleado */
-.employee-title {
-  font-size: 2em;
-  color: #333;
-  margin-bottom: 20px;
-}
-
-/* Tabla de productos */
-.employee-product-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-bottom: 20px;
-}
-
-.employee-product-table th, .employee-product-table td {
-  padding: 10px;
-  border: 1px solid #ddd;
-  text-align: left;
-}
-
-.employee-product-table th {
-  background-color: #4CAF50;
-  color: white;
-}
-
-/* Estilo del botón de regreso */
-.employee-back-button {
-  display: inline-block;
-  margin-top: 20px;
-  padding: 10px 20px;
-  color: #4CAF50;
-  text-decoration: none;
-  border: 2px solid #4CAF50;
-  border-radius: 5px;
-  transition: 0.3s;
-}
-
-.employee-back-button:hover {
-  background-color: #4CAF50;
-  color: white;
-}
-
-/* Core/Style.css */
-
-/* General */
+/* === Estilo general === */
 body {
   font-family: Arial, sans-serif;
   background-color: #f5f5f5;
@@ -253,318 +14,605 @@ h1 {
   margin-bottom: 20px;
 }
 
-/* Grid de productos */
-.product-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-  gap: 20px;
-  padding: 20px;
-  max-width: 1200px;
-  margin: 0 auto;
-}
-
-/* Tarjetas de producto */
-.product-card {
-  background-color: #fff;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-  padding: 20px;
-  text-align: center;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-
-.product-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.15);
-}
-
-.product-card h2 {
-  font-size: 1.5em;
-  color: #333;
-  margin-bottom: 10px;
-}
-
-.product-card p {
-  font-size: 1em;
-  color: #666;
-  margin: 5px 0;
-}
-
-/* Botón de volver al menú */
-.back-button {
-  display: inline-block;
-  margin: 20px auto;
-  text-align: center;
+/* === Header === */
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   padding: 10px 20px;
-  background-color: #4CAF50;
+  background-color: #333;
   color: #fff;
-  border-radius: 4px;
-  text-decoration: none;
-  font-weight: bold;
-  transition: background-color 0.3s ease;
-}
-
-.back-button:hover {
-  background-color: #45a049;
-}
-
-/* FIN DEL ESTILO DE "PRODUCTOS SOLICITADOS" */
-
-/* Estilos generales */
-body {
   font-family: Arial, sans-serif;
-  background-color: #f4f4f4;
-  margin: 0;
+}
+
+header .titulo {
+  font-size: 1.5em;
+  font-weight: bold;
+  text-align: center;
+  flex: 1;
+  color: #f1f1f1;
+}
+
+header .usuario {
+  display: flex;
+  align-items: center;
+  text-align: center;
+}
+
+header .usuario img {
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  margin-left: 10px;
+}
+
+/* === Menú lateral (Side Menu) === */
+.side-menu {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 0;
+  overflow-x: hidden;
+  background-color: #111;
+  color: white;
+  transition: width 0.3s ease;
+  padding-top: 60px;
+  z-index: 1000;
+}
+
+.side-menu ul {
+  list-style: none;
   padding: 0;
 }
 
-header {
-  background-color: #333;
-  color: #fff;
-  padding: 15px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+.side-menu ul li {
+  padding: 8px 16px;
 }
 
-.titulo {
-  font-size: 1.5em;
-}
-
-.usuario {
-  display: flex;
-  align-items: center;
-  text-align: center;
-}
-
-.usuario .division {
-  margin-right: 10px;
-  text-align: right;
-}
-
-.presentacion {
-  display: block;
-  font-size: 0.9em;
-  color: #ddd;
-}
-
-.nombres {
-  font-weight: bold;
-}
-
-/* Contenedor principal */
-.contenedor {
-  max-width: 800px;
-  margin: 20px auto;
-  background-color: #fff;
-  padding: 20px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  border-radius: 8px;
-}
-
-h2 {
-  text-align: center;
-  color: #333;
-}
-
-p {
-  text-align: center;
-  color: #666;
-}
-
-/* Estilos para la sección de funciones */
-.funciones-admin {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-}
-
-.funcion {
-  background-color: #fafafa;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  padding: 15px;
-  text-align: center;
-}
-
-.funcion h3 {
-  color: #333;
-  margin-bottom: 10px;
-}
-
-.funcion p {
-  color: #666;
-  margin-bottom: 15px;
-}
-
-/* Botón para cada función */
-.btn-funcion {
-  display: inline-block;
-  padding: 10px 15px;
-  background-color: #007bff;
-  color: #fff;
-  text-decoration: none;
-  border-radius: 5px;
-  transition: background-color 0.3s;
-}
-
-.btn-funcion:hover {
-  background-color: #0056b3;
-}
-
-/* Contenedor principal */
-.demand-container {
-  background-color: #ffffff;
-  padding: 30px;
-  border-radius: 10px;
-  max-width: 1000px;
-  margin: 40px auto;
-  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-  text-align: center;
-}
-
-/* Título principal */
-.demand-container h1 {
-  font-size: 2em;
-  color: #333333;
-  margin-bottom: 20px;
-}
-
-/* Contenedor de gráficos */
-.demand-chart-container {
-  display: flex;
-  justify-content: space-around;
-  gap: 20px;
-  flex-wrap: wrap;
-}
-
-/* Gráfico individual */
-.demand-chart {
-  width: 45%;
-  background-color: #f9f9f9;
-  border-radius: 10px;
-  padding: 15px;
-  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-  text-align: center;
-}
-
-/* Título de cada gráfico */
-.demand-chart h2 {
-  font-size: 1.5em;
-  color: #555555;
-  margin-bottom: 10px;
-}
-
-/* Estilo para el botón de volver */
-.back-button {
-  display: inline-block;
-  margin-top: 20px;
-  padding: 10px 20px;
-  background-color: #4CAF50;
+.side-menu ul li a {
   color: white;
-  border-radius: 5px;
   text-decoration: none;
-  transition: background-color 0.3s ease;
+  font-size: 1.2em;
+  display: block;
+  transition: background 0.3s ease;
 }
 
-.back-button:hover {
-  background-color: #45a049;
+.side-menu ul li a:hover {
+  background-color: #575757;
 }
 
-/* Efectos y estilos en pantallas pequeñas */
-@media (max-width: 768px) {
-  .demand-chart {
-    width: 100%;
-  }
+.side-menu .close-btn {
+  position: absolute;
+  top: 10px;
+  right: 25px;
+  font-size: 36px;
+  color: white;
+  text-decoration: none;
+  cursor: pointer;
 }
 
-/* Estilos para Gestión de Stock */
-
-.stock-container {
-  width: 90%;
-  max-width: 800px;
-  margin: 20px auto;
-  padding: 20px;
-  background-color: #fff;
-  border-radius: 8px;
-  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-  text-align: center;
-}
-
-.stock-container h1 {
-  font-size: 2em;
-  color: #333;
-  margin-bottom: 20px;
-  font-weight: bold;
-}
-
-.stock-admin-table {
+/* === Tablas === */
+table {
   width: 100%;
   border-collapse: collapse;
   margin-bottom: 20px;
 }
 
-.stock-admin-table th, .stock-admin-table td {
-  padding: 12px;
+table th, table td {
+  padding: 10px;
+  border: 1px solid #ddd;
   text-align: left;
-  border-bottom: 1px solid #ddd;
 }
 
-.stock-admin-table th {
+table th {
   background-color: #4CAF50;
+  color: white;
+}
+
+table tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+/* === Botones generales === */
+button, .back-button, .edit-btn, .delete-btn {
+  padding: 10px 15px;
+  font-size: 0.9em;
+  border: none;
+  border-radius: 5px;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.back-button {
+  display: inline-block;
+  background-color: #4CAF50;
+  color: white;
+  margin-top: 10px;
+}
+
+.back-button:hover {
+  background-color: #45a049;
+}
+
+.edit-btn {
+  background-color: #ffc107;
+  color: white;
+}
+
+.edit-btn:hover {
+  background-color: #e0a800;
+}
+
+.delete-btn {
+  background-color: #dc3545;
+  color: white;
+}
+
+.delete-btn:hover {
+  background-color: #c82333;
+}
+
+/* === Menú empleado === */
+.menu-empleado {
+  background-color: #333;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 200px;
+  height: 100vh;
+  position: fixed;
+  top: 0;
+  left: 0;
+  transition: transform 0.3s ease;
+  transform: translateX(-100%);
+  z-index: 1000;
+}
+
+.menu-empleado.show {
+  transform: translateX(0);
+}
+
+.menu-empleado ul {
+  list-style: none;
+  padding: 0;
+  margin-top: 50px;
+}
+
+.menu-empleado ul li {
+  padding: 15px 20px;
+  border-bottom: 1px solid #444;
+}
+
+.menu-empleado ul li a {
+  text-decoration: none;
   color: white;
   font-size: 1.1em;
 }
 
-.stock-admin-table tr:nth-child(even) {
+.menu-empleado ul li a:hover {
+  background-color: #575757;
+  color: #f1f1f1;
+}
+
+.menu-empleado .menu-header {
+  padding: 20px;
+  text-align: center;
+  background-color: #444;
+  font-size: 1.5em;
+}
+
+.menu-empleado .toggle-menu {
+  cursor: pointer;
+  position: absolute;
+  top: 20px;
+  right: -45px;
+  background-color: #333;
+  border: 2px solid white;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.menu-empleado .toggle-menu:hover {
+  background-color: #575757;
+}
+
+/* Estilo para los cuadros de las secciones */
+.cuadro-seccion {
+  border: 1px solid #ddd; /* Borde del cuadro */
+  border-radius: 10px; /* Bordes redondeados */
+  padding: 20px;
+  margin: 20px 0;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Sombra para resaltar */
+  background-color: #fff; /* Fondo del cuadro */
+}
+
+/* Encabezado de la sección */
+.seccion-titulo {
+  font-size: 1.5rem;
+  color: #333;
+  margin-bottom: 15px;
+}
+
+/* Estilo para los elementos dentro de la sección de mensajes */
+.mensaje-item {
+  background-color: #f9f9f9; /* Fondo claro para los mensajes */
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  margin-bottom: 10px;
+}
+
+/* Estilo de los mensajes vacíos */
+.mensaje-vacio {
+  color: #777;
+  text-align: center;
+  margin: 10px 0;
+}
+
+/* === Stock Tienda === */
+.stock-tienda-container {
+  max-width: 800px;
+  margin: 20px auto;
+  padding: 20px;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.stock-tienda-container h1 {
+  font-size: 2em;
+  color: #333;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+.stock-tienda-container table th, 
+.stock-tienda-container table td {
+  padding: 10px;
+  border: 1px solid #ddd;
+  text-align: left;
+}
+
+.stock-tienda-container table th {
+  background-color: #4CAF50;
+  color: white;
+}
+
+.stock-tienda-container table tr:nth-child(even) {
   background-color: #f9f9f9;
 }
 
-.stock-admin-table td {
-  font-size: 1em;
-  color: #333;
+/* === Gestión Venta === */
+/* === Gestión Venta === */
+.gestion-venta-container {
+  max-width: 600px;
+  margin: 30px auto;
+  padding: 25px;
+  background-color: #ffffff;
+  border: 1px solid #e0e0e0;
+  border-radius: 12px;
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+  font-family: 'Arial', sans-serif;
 }
 
-.stock-edit-btn, .stock-delete-btn {
-  padding: 8px 12px;
-  font-size: 0.9em;
-  border: none;
-  border-radius: 4px;
+.gestion-venta-container h1 {
+  text-align: center;
+  color: #007bff;
+  font-size: 2rem;
+  font-weight: bold;
+  margin-bottom: 25px;
+  text-transform: uppercase;
+  border-bottom: 2px solid #007bff;
+  padding-bottom: 10px;
+}
+
+.gestion-venta-container form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.gestion-venta-container label {
+  font-size: 1rem;
+  font-weight: bold;
+  color: #495057;
+  margin-bottom: 5px;
+  display: block;
+}
+
+.gestion-venta-container select,
+.gestion-venta-container input {
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 1rem;
+  width: 100%;
+  box-sizing: border-box;
+  background-color: #f9f9f9;
+  transition: border-color 0.3s ease, background-color 0.3s ease;
+}
+
+.gestion-venta-container select:focus,
+.gestion-venta-container input:focus {
+  border-color: #007bff;
+  background-color: #ffffff;
+  outline: none;
+}
+
+.gestion-venta-container button {
+  background-color: #28a745;
   color: white;
+  padding: 12px 25px;
+  border: none;
+  border-radius: 8px;
+  font-size: 1.1rem;
   cursor: pointer;
-  margin: 0 5px;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+.gestion-venta-container button:hover {
+  background-color: #218838;
+  transform: translateY(-2px);
+}
+
+.gestion-venta-container button:active {
+  background-color: #1e7e34;
+  transform: translateY(0);
+}
+
+.gestion-venta-container .messages {
+  padding: 10px;
+  border-radius: 8px;
+  margin-top: 15px;
+}
+
+.gestion-venta-container .messages .success {
+  background-color: #d4edda;
+  color: #155724;
+  border: 1px solid #c3e6cb;
+}
+
+.gestion-venta-container .messages .error {
+  background-color: #f8d7da;
+  color: #721c24;
+  border: 1px solid #f5c6cb;
+}
+
+.gestion-venta-container .messages p {
+  margin: 0;
+  font-size: 0.9rem;
+  text-align: center;
+}
+
+/* === Editar Producto === */
+.editar-producto-container {
+  max-width: 600px;
+  margin: 20px auto;
+  padding: 20px;
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.editar-producto-container h1 {
+  text-align: center;
+  color: #007bff;
+  font-size: 2rem;
+  font-weight: bold;
+}
+
+.editar-producto-container form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.editar-producto-container label {
+  font-size: 1rem;
+  color: #495057;
+  font-weight: bold;
+}
+
+.editar-producto-container input[type="text"],
+.editar-producto-container input[type="number"] {
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  font-size: 1rem;
+}
+
+/* === Eliminar Producto === */
+.eliminar-producto-container {
+  max-width: 400px;
+  margin: 50px auto;
+  padding: 20px;
+  background-color: #ffffff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+.eliminar-producto-container h1 {
+  color: #dc3545;
+  font-size: 1.8rem;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+.eliminar-producto-container button.eliminar-btn-delete {
+  background-color: #dc3545;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  font-size: 1rem;
+  cursor: pointer;
   transition: background-color 0.3s ease;
 }
 
-.stock-edit-btn {
-  background-color: #ffc107;
+.eliminar-producto-container button.eliminar-btn-delete:hover {
+  background-color: #b52d3a;
 }
 
-.stock-edit-btn:hover {
-  background-color: #e0a800;
-}
-
-.stock-delete-btn {
-  background-color: #dc3545;
-}
-
-.stock-delete-btn:hover {
-  background-color: #c82333;
-}
-
-/* Botón de regreso al menú */
-.stock-back-btn {
-  display: inline-block;
+.eliminar-producto-container a.eliminar-btn-cancel {
+  background-color: #6c757d;
+  color: white;
   padding: 10px 20px;
-  color: #fff;
-  background-color: #4CAF50;
   border-radius: 5px;
   text-decoration: none;
-  font-weight: bold;
+  font-size: 1rem;
   transition: background-color 0.3s ease;
 }
 
-.stock-back-btn:hover {
+.eliminar-producto-container a.eliminar-btn-cancel:hover {
+  background-color: #5a6268;
+}
+/*menu administrador css*/
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f9;
+    color: #333;
+    margin: 0;
+    padding: 0;
+}
+
+header {
+    background-color: #333;
+    color: #fff;
+    padding: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.titulo {
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.admin-panel-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+    padding: 20px;
+}
+
+.admin-panel-card {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    width: 300px;
+    text-align: center;
+}
+
+.admin-panel-card h3 {
+    font-size: 18px;
+    margin-bottom: 10px;
+}
+
+.admin-panel-card p {
+    font-size: 14px;
+    margin-bottom: 15px;
+}
+
+.admin-panel-card a {
+    text-decoration: none;
+    color: #007bff;
+    font-weight: bold;
+}
+
+.admin-panel-card a:hover {
+    text-decoration: underline;
+}
+
+/*editar proveedor */
+/* Estilos generales para el formulario */
+body {
+  font-family: 'Arial', sans-serif;
+  background-color: #f5f5f5;
+  margin: 0;
+  padding: 20px;
+}
+
+h1 {
+  text-align: center;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+/* Contenedor de formulario */
+form {
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+/* Estilo de los campos del formulario */
+form p {
+  margin-bottom: 15px;
+}
+
+form label {
+  display: block;
+  font-weight: bold;
+  margin-bottom: 5px;
+  color: #555;
+}
+
+form input[type="text"],
+form input[type="email"],
+form input[type="number"],
+form input[type="submit"],
+button {
+  width: 100%;
+  padding: 10px;
+  margin: 5px 0 10px 0;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 1rem;
+}
+
+form input[type="submit"],
+button {
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+form input[type="submit"]:hover,
+button:hover {
   background-color: #45a049;
 }
+
+/* Estilo para el botón de cancelar */
+a {
+  display: inline-block;
+  margin-top: 10px;
+  text-decoration: none;
+  color: #007BFF;
+  font-size: 1rem;
+  transition: color 0.3s ease;
+}
+
+a:hover {
+  color: #0056b3;
+}
+

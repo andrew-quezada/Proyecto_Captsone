@@ -15,10 +15,7 @@
 
     <!-- Header -->
     <header>
-        <!-- Título del panel de administrador -->
         <div class="titulo">PANEL DE ADMINISTRADOR</div>
-        
-        <!-- Información del administrador -->
         <div class="usuario">
             <div class="division">
                 <span class="presentacion">Bienvenido</span>
@@ -28,36 +25,30 @@
     </header>
 
     <!-- Contenido principal del panel de administrador -->
-    <main class="contenedor">
-        <h2>Panel de Control del Administrador</h2>
-        <p>Bienvenido al panel de administrador. Aquí puedes gestionar las funciones administrativas.</p>
+    <main class="admin-panel-container">
+        <div class="admin-panel-card">
+            <h3>📊 Predicción de Demanda</h3>
+            <p>Utiliza esta función para acceder a las predicciones de demanda y gestionar el inventario de forma anticipada.</p>
+            <a href="{% url 'prediccion_demanda' %}">Ir a Predicción de Demanda</a>
+        </div>
 
-        <!-- Descripción y enlaces a las funciones -->
-        <section class="funciones-admin">
-            <div class="funcion">
-                <h3>📈 Predicción de Demanda</h3>
-                <p>Utiliza esta función para acceder a las predicciones de demanda y gestionar el inventario de forma anticipada.</p>
-                <a href="{% url 'prediccion_demanda' %}" class="btn-funcion">Ir a Predicción de Demanda</a>
-            </div>
+        <div class="admin-panel-card">
+            <h3>📦 Gestión de Stock</h3>
+            <p>Gestiona el inventario de productos, revisa los niveles de stock y asegura la disponibilidad de productos.</p>
+            <a href="{% url 'gestion_stock' %}">Ir a Gestión de Stock</a>
+        </div>
 
-            <div class="funcion">
-                <h3>📦 Gestión de Stock</h3>
-                <p>Gestiona el inventario de productos, revisa los niveles de stock y asegura la disponibilidad de productos.</p>
-                <a href="{% url 'gestion_stock' %}" class="btn-funcion">Ir a Gestión de Stock</a>
-            </div>
+        <div class="admin-panel-card">
+            <h3>🛒 Actualizar stock </h3>
+            <p>Actualice el stock de productos vendidos en el negocio y mantenga informado tanto a sus empleados como a usted mismo sobre lo que queda en el negocio..</p>
+            <a href="{% url 'registro_venta' %}">Ir a Gestión de Ventas</a>
+        </div>
 
-            <div class="funcion">
-                <h3>🛒 Registrar Venta</h3>
-                <p>Accede al módulo para registrar las ventas de productos y actualizar las estadísticas de ventas.</p>
-                <a href="{% url 'registro_venta' %}" class="btn-funcion">Ir a Registrar Venta</a>
-            </div>
-
-            <div class="funcion">
-                <h3>🔒 Cerrar Sesión</h3>
-                <p>Cierra tu sesión de administrador de forma segura y regresa a la página de inicio.</p>
-                <a href="{% url 'inicio' %}" class="btn-funcion">Cerrar Sesión</a>
-            </div>
-        </section>
+        <div class="admin-panel-card">
+            <h3>🔒 Cerrar Sesión</h3>
+            <p>Cierra tu sesión de administrador de forma segura y regresa a la página de inicio.</p>
+            <a href="{% url 'inicio' %}">Cerrar Sesión</a>
+        </div>
     </main>
 
 </body>
